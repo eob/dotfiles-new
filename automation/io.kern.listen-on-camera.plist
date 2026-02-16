@@ -7,21 +7,27 @@
 
     <key>ProgramArguments</key>
     <array>
-      <string>/opt/homebrew/bin/zsh</string>
-      <string>-c</string>
-      <string>source /Users/ask/.zshrc.local &amp;&amp; /opt/homebrew/opt/python/libexec/bin/python /Users/ask/.dotfiles/automation/listen-for-camera.py</string>
+      <string>/Users/akern/.dotfiles/automation/listen-for-camera.sh</string>
     </array>
 
-    <key>UserName</key>
-    <string>ask</string>
+    <key>RunAtLoad</key>
+    <true/>
 
-    <key>StartInterval</key>
-    <integer>5</integer>
+    <key>KeepAlive</key>
+    <true/>
+
+    <key>EnvironmentVariables</key>
+    <dict>
+      <key>ELGATO_LIGHT_HOST</key>
+      <string>192.168.0.199</string>
+      <key>PATH</key>
+      <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+    </dict>
 
     <key>StandardOutPath</key>
-    <string>/Users/ask/Library/Kern.io/lights.out</string>
+    <string>/tmp/listen-on-camera.log</string>
 
     <key>StandardErrorPath</key>
-    <string>/Users/ask/Library/Kern.io/lights.err</string>
+    <string>/tmp/listen-on-camera.error.log</string>
   </dict>
 </plist>

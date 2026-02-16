@@ -90,6 +90,7 @@ alias gp='git push origin `git branch --show-current`'
 alias gpf='git push --force origin `git branch --show-current`'
 alias l='exa'
 alias vdot="cd $HOME/.dotfiles && v"
+alias c='claude'
 
 # fzf & ripgrep
 if which rg 2>&1 > /dev/null; then
@@ -152,7 +153,11 @@ fi
 
 # zoxide
 if which zoxide 2>&1 > /dev/null; then
-  eval "$(zoxide init zsh --cmd cd)"
+  if [[ -o interactive ]]; then
+    eval "$(zoxide init zsh --cmd cd)"
+  else
+    eval "$(zoxide init zsh)"
+  fi
 fi
 
 # git wip
@@ -220,3 +225,5 @@ function irebase() {
   git branch kern/backups/`date +%s`
   git rebase -i "$UPSTREAM_BRANCH"
 }
+export RACK_ENV=development
+export PATH="$HOME/.local/bin:$PATH"
