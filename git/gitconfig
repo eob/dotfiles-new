@@ -1,7 +1,5 @@
-[user]
-name = Alex Kern
-email = alex@kern.io
-signingkey = 7C270B69AE6995E347736859EF051FACCACBEE25
+# User identity is NOT set here — define it per-host in ~/.gitconfig.local.
+# Same for [user].signingkey if you sign commits.
 
 [color]
 diff = auto
@@ -62,3 +60,8 @@ hunk-header-style = file line-number syntax
 
 [gpg]
 program = gpg
+
+# Per-host overrides (identity, signing, etc.). Optional — include only if present.
+# This must be the LAST include directive so its values override the ones above.
+[include]
+path = ~/.gitconfig.local
