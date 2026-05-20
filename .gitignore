@@ -2,3 +2,4 @@ nvim/.vim
 nvim/.netrwhist
 nvim/bundle
 .claude/settings.local.json
+.zshrc.local
