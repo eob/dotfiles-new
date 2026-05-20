@@ -4,9 +4,9 @@ CWD := $(shell pwd)
 install:
 	mkdir -p ~/.config
 	mkdir -p ~/.config/alacritty
-	- ln -Fis $(CWD)/nvim ~/.config
-	- ln -Fis $(CWD)/kitty ~/.config
-	- ln -Fis $(CWD)/ghostty ~/.config
+	- ln -is $(CWD)/nvim ~/.config/nvim
+	- ln -is $(CWD)/kitty ~/.config/kitty
+	- ln -is $(CWD)/ghostty ~/.config/ghostty
 	- ln -is $(CWD)/zsh/zshrc ~/.zshrc
 	- ln -is $(CWD)/other/hushlogin ~/.hushlogin
 	- ln -is $(CWD)/git/gitignore ~/.gitignore
@@ -14,7 +14,7 @@ install:
 	- ln -is $(CWD)/tmux/tmux.conf ~/.tmux.conf
 	- ln -is $(CWD)/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
 	- ln -is $(CWD)/alacritty/base16-monokai.yml ~/.config/alacritty/base16-monokai.yml
-	- git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
+	- [ -d ~/.config/base16-shell ] || git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
 	- $(CURDIR)/scripts/macos-defaults.sh
 	- $(CURDIR)/scripts/brew-install.sh
 	- $(CURDIR)/scripts/go-install.sh

@@ -22,7 +22,7 @@ brew install \
   git-delta
 
 # python3 pip modules
-python3 -m pip install pynvim
+python3 -m pip install --user --break-system-packages pynvim
 
 # casks
 brew install \
