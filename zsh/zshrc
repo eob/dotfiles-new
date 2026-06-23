@@ -8,6 +8,16 @@ export EDITOR=nvim
 export VISUAL="$EDITOR"
 export PATH="${HOME}/.dotfiles/bin:${HOME}/.local/bin:${PATH}"
 
+# TERM fallback: if this host has no terminfo entry for the advertised $TERM
+# (e.g. connecting from a terminal whose terminfo was never installed here),
+# fall back to xterm-256color so colors/keys don't break. Harmless when the
+# entry exists.
+if [[ -n "$TERM" && "$TERM" != "xterm-256color" ]] && command -v infocmp &>/dev/null; then
+  if ! infocmp "$TERM" &>/dev/null; then
+    export TERM=xterm-256color
+  fi
+fi
+
 # brew (macOS)
 if [[ "$_OS" == "Darwin" && -f /opt/homebrew/bin/brew ]]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
@@ -36,6 +46,11 @@ fi
 BASE16_SHELL="${HOME}/.config/base16-shell/"
 [[ -n "$PS1" ]] && [[ -s "$BASE16_SHELL/profile_helper.sh" ]] && eval "$("$BASE16_SHELL/profile_helper.sh")"
 
+# Tokyo Night Dark — vendored base16 scheme (upstream base16-shell ships none).
+# Sourced last so it overrides any persisted ~/.base16_theme.
+[[ -n "$PS1" ]] && [[ -s "${HOME}/.dotfiles/zsh/base16-tokyo-night-dark.sh" ]] \
+  && source "${HOME}/.dotfiles/zsh/base16-tokyo-night-dark.sh"
+
 # git prompt
 autoload -U add-zsh-hook
 source "${HOME}/.dotfiles/zsh/git-prompt.zsh"
@@ -59,6 +74,20 @@ alias c='claude --dangerously-skip-permissions'
 alias editzsh='nvim ~/.zshrc'
 alias sourcezsh='source ~/.zshrc'
 alias vdot="cd ${HOME}/.dotfiles && v"
+# devbox — mosh to the devbox over 443 with a 24h server network timeout
+alias devbox='MOSH_SERVER_NETWORK_TMOUT=86400 mosh -p 443 devbox'
+# serve [PATH] — free port 8000, then serve PATH (default ".")
+serve() {
+  local port=8000
+  if fuser "$port/tcp" &>/dev/null; then
+    echo "serve: freeing port $port"
+    fuser -k -TERM "$port/tcp" &>/dev/null
+    sleep 0.3
+    fuser -k -KILL "$port/tcp" &>/dev/null  # force-kill anything that ignored TERM
+  fi
+  miniserve --port $port "${1:-.}"
+}
+alias z='zellij-launch'   # attach to (or create) the default zellij session
 
 # l -> eza/exa or ls
 if command -v eza &>/dev/null; then
@@ -89,6 +118,11 @@ if command -v delta &>/dev/null; then
   export GIT_PAGER=delta
 fi
 
+# Force emacs keybindings. zsh otherwise auto-selects vi mode because
+# $EDITOR=nvim matches *vi*, which leaves the Mac delete key bound to
+# `vi-backward-char` in vicmd mode (cursor moves instead of deleting).
+bindkey -e
+
 # history (up/down arrow prefix search)
 autoload -U history-search-end
 zle -N history-beginning-search-backward-end history-search-end
@@ -103,6 +137,9 @@ HISTFILE="${HOME}/.zsh_history"
 setopt SHARE_HISTORY
 setopt HIST_IGNORE_DUPS
 setopt HIST_IGNORE_SPACE
+
+# allow # comments on the interactive command line
+setopt interactive_comments
 
 # fastrebase
 function fastrebase() {
@@ -173,3 +210,24 @@ fi
 
 # local overrides
 [[ -f "${HOME}/.zshrc.local" ]] && source "${HOME}/.zshrc.local"
+
+# bun completions
+[ -s "/home/ted/.bun/_bun" ] && source "/home/ted/.bun/_bun"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/ted/.local/bin:$PATH"
+
+# Auto-start zellij when connecting via mosh: attach to (or create) the default
+# session. Detects mosh by walking the process tree for mosh-server. Skips if
+# already inside zellij ($ZELLIJ), non-interactive, or zellij isn't installed.
+if [[ -o interactive && -z "${ZELLIJ:-}" ]] && command -v zellij &>/dev/null; then
+  _ppid=$PPID
+  while [[ -n "$_ppid" && "$_ppid" -gt 1 ]]; do
+    if [[ "$(ps -o comm= -p "$_ppid" 2>/dev/null)" == *mosh-server* ]]; then
+      exec zellij-launch
+    fi
+    _ppid=$(ps -o ppid= -p "$_ppid" 2>/dev/null | tr -d ' ')
+  done
+  unset _ppid
+fi

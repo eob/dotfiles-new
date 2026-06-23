@@ -1,0 +1,15 @@
+// Default zellij layout — identical to the built-in default (tab-bar on top,
+// status-bar on bottom), except the first tab is named with a coconut so it
+// shows in the top-left of the tab bar.
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="tab-bar"
+        }
+        children
+        pane size=1 borderless=true {
+            plugin location="status-bar"
+        }
+    }
+    tab name="🥥"
+}

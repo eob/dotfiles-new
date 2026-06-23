@@ -4,16 +4,19 @@ CWD := $(shell pwd)
 install:
 	mkdir -p ~/.config
 	mkdir -p ~/.config/alacritty
+	mkdir -p ~/.config/zellij
+	mkdir -p ~/.config/zellij/layouts
 	- ln -is $(CWD)/nvim ~/.config/nvim
 	- ln -is $(CWD)/kitty ~/.config/kitty
 	- ln -is $(CWD)/ghostty ~/.config/ghostty
+	- ln -is $(CWD)/zellij/config.kdl ~/.config/zellij/config.kdl
+	- ln -is $(CWD)/zellij/layouts/default.kdl ~/.config/zellij/layouts/default.kdl
 	- ln -is $(CWD)/zsh/zshrc ~/.zshrc
 	- ln -is $(CWD)/other/hushlogin ~/.hushlogin
 	- ln -is $(CWD)/git/gitignore ~/.gitignore
 	- cp -n $(CWD)/git/gitconfig ~/.gitconfig
-	- ln -is $(CWD)/tmux/tmux.conf ~/.tmux.conf
 	- ln -is $(CWD)/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
-	- ln -is $(CWD)/alacritty/base16-monokai.yml ~/.config/alacritty/base16-monokai.yml
+	- ln -is $(CWD)/alacritty/tokyo-night.yml ~/.config/alacritty/tokyo-night.yml
 	- [ -d ~/.config/base16-shell ] || git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
 	- $(CURDIR)/scripts/macos-defaults.sh
 	- $(CURDIR)/scripts/brew-install.sh

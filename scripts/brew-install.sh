@@ -6,7 +6,7 @@ set -euo pipefail
 brew install \
   git \
   zsh \
-  tmux \
+  zellij \
   python3 \
   node \
   neovim \
@@ -15,7 +15,6 @@ brew install \
   cocoapods \
   zsh-syntax-highlighting \
   zsh-autosuggestions \
-  reattach-to-user-namespace \
   broot \
   zoxide \
   gh \

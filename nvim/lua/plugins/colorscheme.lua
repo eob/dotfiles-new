@@ -42,11 +42,18 @@ return {
     },
   },
 
-  -- Configure LazyVim to load catppuccin
+  -- Tokyo Night (bundled with LazyVim). "night" is the dark variant.
+  {
+    "folke/tokyonight.nvim",
+    lazy = true,
+    opts = { style = "night" },
+  },
+
+  -- Configure LazyVim to load Tokyo Night Dark
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "catppuccin-macchiato",
+      colorscheme = "tokyonight-night",
     },
   },
 }

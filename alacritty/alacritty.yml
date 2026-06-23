@@ -12,7 +12,7 @@ live_config_reload: true
 # All imports must either be absolute paths starting with `/`, or paths relative
 # to the user's home directory starting with `~/`.
 import:
-  - ~/.config/alacritty/base16-monokai.yml
+  - ~/.config/alacritty/tokyo-night.yml
 
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
@@ -201,7 +201,7 @@ shell:
   args:
     - --login
     # - -c
-    # - ~/.dotfiles/bin/tmux-launch
+    # - ~/.dotfiles/bin/zellij-launch
 
 # Startup directory
 #

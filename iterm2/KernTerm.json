@@ -331,7 +331,7 @@
     }
   },
   "Window Type" : 0,
-  "Initial Text" : "tmux-launch",
+  "Initial Text" : "zellij-launch",
   "Background Image Location" : "",
   "Blur" : false,
   "Badge Color" : {

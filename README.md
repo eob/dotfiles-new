@@ -3,7 +3,7 @@
 ## Dotfiles included
 
 * **.config/nvim**: neovim configuration
-* **.tmux.conf**: tmux configuration
+* **zellij**: terminal multiplexer (uses built-in defaults — no config file)
 * **.gitignore**: global git ignore for macOS
 * **.gitconfig**: git and GitHub configuration
 * **.hushlogin**: no MOTD
@@ -17,19 +17,24 @@
 
 ## Key Bindings
 
-### tmux
+### zellij
 
-cmd+t → new window (C-a c)
-cmd+d → split horizontal (C-a %)
-cmd+shift+d → split vertical (C-a ")
-cmd+w → kill pane (C-a x)
-cmd+[ / cmd+] (and shift variants) → prev/next window
+Uses zellij's built-in default keybinds. Ghostty maps macOS shortcuts onto them:
+
+cmd+t → new tab (Ctrl-t n)
+cmd+d → split right (Ctrl-p r)
+cmd+shift+d → split down (Ctrl-p d)
+cmd+w → close pane (Ctrl-p x)
+cmd+[ / cmd+] (and shift variants) → prev/next tab (Ctrl-t h / l)
 shift+enter → literal newline
 
-C-h / C-j / C-k / C-l to move between panes.
+Native zellij defaults: Ctrl-p (pane mode), Ctrl-t (tab mode), Ctrl-n (resize),
+Ctrl-s (scroll/search), Ctrl-o (session), Ctrl-q (quit). Alt+h/j/k/l move
+focus between panes; Alt+n opens a new pane.
 
 ### Shortcuts
 
+z → zellij-launch (attach to / create the default zellij session)
 c → claude --dangerously-skip-permissions (YOLO Claude)
 v → nvim . (or a file)
 vdot → cd to ~/.dotfiles and open nvim

@@ -36,3 +36,5 @@ Session.vim
 
 # Swagger
 swagger.json
+
+**/.claude/settings.local.json

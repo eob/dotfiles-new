@@ -1,7 +1,7 @@
 # NOTE: reload config on Linux (ctrl+shift+,) or macOS (cmd+shift+,)
 
-# Set the terminal theme
-theme = Catppuccin Macchiato
+# Set the terminal theme (built-in; `ghostty +list-themes` to browse)
+theme = TokyoNight
 
 # Give the window a little padding
 window-padding-x = 16
@@ -19,13 +19,19 @@ font-size = 9
 # Give each line a bit more breathing room
 adjust-cell-height = 10%
 
-# macOS-like key bindings for tmux
-keybind = cmd+t=text:\x01\x63
-keybind = cmd+d=text:\x01\x25
-keybind = cmd+w=text:\x01\x78
-keybind = cmd+shift+d=text:\x01\x22
-keybind = cmd+left_bracket=text:\x01p
-keybind = cmd+right_bracket=text:\x01n
-keybind = cmd+shift+left_bracket=text:\x01p
-keybind = cmd+shift+right_bracket=text:\x01n
+# Auto-install xterm-ghostty terminfo on remote hosts via SSH, and set TERM
+# correctly for the session. Cached per-host; inspect with `ghostty +ssh-cache`.
+shell-integration-features = ssh-env,ssh-terminfo
+
+# macOS-like key bindings for zellij (default keybinds).
+# Each sends: enter a mode (\x14 = Ctrl-t tab, \x10 = Ctrl-p pane),
+# the action key, then \x1b (Esc) to drop back to normal mode.
+keybind = cmd+t=text:\x14n\x1b
+keybind = cmd+d=text:\x10r\x1b
+keybind = cmd+w=text:\x10x\x1b
+keybind = cmd+shift+d=text:\x10d\x1b
+keybind = cmd+left_bracket=text:\x14h\x1b
+keybind = cmd+right_bracket=text:\x14l\x1b
+keybind = cmd+shift+left_bracket=text:\x14h\x1b
+keybind = cmd+shift+right_bracket=text:\x14l\x1b
 keybind = shift+enter=text:\n

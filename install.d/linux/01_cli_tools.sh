@@ -16,6 +16,18 @@ if ! command -v fzf &>/dev/null; then
   sudo apt-get install -y -qq fzf >/dev/null
 fi
 
+if ! command -v zellij &>/dev/null; then
+  echo "Installing zellij..."
+  url=$(curl -sSfL https://api.github.com/repos/zellij-org/zellij/releases/latest \
+    | grep "browser_download_url" \
+    | grep "zellij-x86_64-unknown-linux-musl.tar.gz" \
+    | head -n1 | cut -d '"' -f4)
+  curl -sSfL "$url" -o /tmp/zellij.tar.gz
+  tar -xzf /tmp/zellij.tar.gz -C /tmp
+  sudo install -m755 /tmp/zellij /usr/local/bin/zellij
+  rm -f /tmp/zellij.tar.gz /tmp/zellij
+fi
+
 if ! command -v zoxide &>/dev/null && ! [[ -x "${HOME}/.local/bin/zoxide" ]]; then
   echo "Installing zoxide..."
   curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh

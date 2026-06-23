@@ -580,7 +580,7 @@
 			<key>Idle Code</key>
 			<integer>0</integer>
 			<key>Initial Text</key>
-			<string>tmux-launch</string>
+			<string>zellij-launch</string>
 			<key>Jobs to Ignore</key>
 			<array>
 				<string>rlogin</string>
