@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+# devbox-ssh — plain SSH to the devbox over TCP (captive / airplane-wifi
+# friendly), with the dev-server ports forwarded onto this machine.
+#
+# Fixes the recurring
+#   bind [127.0.0.1]:5173: Address already in use
+#   channel_setup_fwd_listener_tcpip: cannot listen to port: 5173
+#   Could not request local forwarding.
+# error: a *previous* devbox-ssh session whose network dropped (laptop sleep,
+# wifi change — the mosh use case) can keep holding these local ports. Before
+# connecting we reap that stale forwarder (sole-user box, so killing it is fine),
+# then connect with ExitOnForwardFailure so a genuinely-blocked port fails loudly
+# instead of limping along forwarding nothing.
+#
+# Connection details come from ~/.zshrc.local (kept out of the repo):
+#   DEVBOX_IP        required — devbox public IP/host
+#   DEVBOX_USERNAME  required — ssh username
+#   DEVBOX_PORT      optional — SSH TCP port (default 443)
+#   DEVBOX_SSH_KEY   optional — identity file for ssh
+#
+# Usage:
+#   devbox-ssh            # interactive shell, dev ports forwarded
+#   devbox-ssh <cmd...>   # run a command on the box instead of a shell
+set -euo pipefail
+
+: "${DEVBOX_IP:?set DEVBOX_IP in ~/.zshrc.local}"
+: "${DEVBOX_USERNAME:?set DEVBOX_USERNAME in ~/.zshrc.local}"
+port="${DEVBOX_PORT:-443}"
+
+# Local<->remote forwards (thisMachine:PORT -> devbox:PORT).
+PORTS=(8080 5173 3000 8000 5292 5293 6006)
+
+# PIDs LISTENing on a given local TCP port (lsof preferred, fuser fallback).
+port_listeners() {
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -ti "tcp:${1}" -sTCP:LISTEN 2>/dev/null || true
+  else
+    fuser "${1}/tcp" 2>/dev/null || true
+  fi
+}
+
+# True only for an ssh process — so we never kill a real local server that
+# happens to sit on a forwarded port; only our own stale tunnels.
+is_ssh() { [[ "$(ps -p "$1" -o comm= 2>/dev/null)" == *ssh ]]; }
+
+# Reap stale devbox-ssh forwarders still holding our local ports.
+reap_stale_forwards() {
+  local p pid killed=0
+  for p in "${PORTS[@]}"; do
+    for pid in $(port_listeners "$p"); do
+      if is_ssh "$pid"; then kill "$pid" 2>/dev/null && killed=1; fi
+    done
+  done
+  (( killed )) || return 0
+  sleep 0.3  # let the sockets actually release before we rebind
+  for p in "${PORTS[@]}"; do
+    for pid in $(port_listeners "$p"); do
+      is_ssh "$pid" && kill -9 "$pid" 2>/dev/null || true
+    done
+  done
+}
+
+reap_stale_forwards
+
+forwards=()
+for p in "${PORTS[@]}"; do
+  forwards+=(-L "${p}:localhost:${p}")
+done
+
+ssh_opts=(
+  -p "${port}"
+  -o ServerAliveInterval=20
+  -o ServerAliveCountMax=3
+  -o TCPKeepAlive=yes
+  -o ExitOnForwardFailure=yes
+)
+[[ -n "${DEVBOX_SSH_KEY:-}" ]] && ssh_opts+=(-i "${DEVBOX_SSH_KEY}")
+
+exec ssh "${ssh_opts[@]}" "${forwards[@]}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" "$@"

@@ -74,8 +74,8 @@ alias c='claude --dangerously-skip-permissions'
 alias editzsh='nvim ~/.zshrc'
 alias sourcezsh='source ~/.zshrc'
 alias vdot="cd ${HOME}/.dotfiles && v"
-# devbox — mosh to the devbox over 443 with a 24h server network timeout
-alias devbox='MOSH_SERVER_NETWORK_TMOUT=86400 mosh -p 443 devbox'
+# devbox / devbox-ssh live in ~/.dotfiles/bin (parameterized by DEVBOX_* in
+# ~/.zshrc.local). `devbox` = mosh in (UDP); `devbox-ssh` = TCP + port forwards.
 # serve [PATH] — free port 8000, then serve PATH (default ".")
 serve() {
   local port=8000

@@ -39,6 +39,10 @@ c → claude --dangerously-skip-permissions (YOLO Claude)
 v → nvim . (or a file)
 vdot → cd to ~/.dotfiles and open nvim
 editzsh / sourcezsh — edit/reload zshrc
+devbox → mosh into the devbox (UDP; roams across sleep/wifi changes)
+devbox-ssh → SSH over TCP with dev ports forwarded (captive/airplane wifi); reaps
+  any stale forwarder holding the local ports first, so reconnecting always works.
+  Both read DEVBOX_IP / DEVBOX_USERNAME from ~/.zshrc.local (see .zshrc.local.example).
 Git: gs (status -sb), gc (commit -av), gco / gcob, gb, gp (push current), gpf (force push current)
 l → eza (or exa/ls fallback)
 

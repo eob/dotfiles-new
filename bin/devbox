@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# devbox — mosh into the devbox (UDP), resuming your zellij session.
+#
+# mosh roams across network changes / laptop sleep, so this is the everyday way
+# in. It needs UDP, though: on captive / airplane wifi that blocks UDP, use
+# `devbox-ssh` (plain TCP) instead.
+#
+# Connection details come from ~/.zshrc.local (kept out of the repo):
+#   DEVBOX_IP         required — devbox public IP/host
+#   DEVBOX_USERNAME   required — ssh username
+#   DEVBOX_PORT       optional — SSH/bootstrap TCP port (default 443)
+#   DEVBOX_MOSH_PORT  optional — mosh UDP port          (default 443)
+#   DEVBOX_SSH_KEY    optional — identity file for ssh
+set -euo pipefail
+
+: "${DEVBOX_IP:?set DEVBOX_IP in ~/.zshrc.local}"
+: "${DEVBOX_USERNAME:?set DEVBOX_USERNAME in ~/.zshrc.local}"
+port="${DEVBOX_PORT:-443}"
+mosh_port="${DEVBOX_MOSH_PORT:-443}"
+
+# mosh bootstraps over ssh; point that ssh at our TCP port (+ key if set).
+ssh_cmd="ssh -p ${port}"
+[[ -n "${DEVBOX_SSH_KEY:-}" ]] && ssh_cmd+=" -i ${DEVBOX_SSH_KEY}"
+
+# 24h server-side timeout so a slept/roamed session lingers instead of dying.
+exec env MOSH_SERVER_NETWORK_TMOUT=86400 \
+  mosh --ssh="${ssh_cmd}" -p "${mosh_port}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" "$@"

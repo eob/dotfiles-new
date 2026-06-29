@@ -1,0 +1,9 @@
+# ~/.zshrc.local — machine-specific config, NOT tracked in git.
+# Copy to ~/.zshrc.local and fill in. Sourced near the end of zsh/zshrc.
+
+# --- devbox (used by `bin/devbox` and `bin/devbox-ssh`) ---------------------
+export DEVBOX_IP="35.199.0.23"     # devbox public IP / host
+export DEVBOX_USERNAME="ted"        # ssh username
+# export DEVBOX_PORT=443            # SSH TCP port        (default 443)
+# export DEVBOX_MOSH_PORT=443       # mosh UDP port       (default 443)
+# export DEVBOX_SSH_KEY="$HOME/.ssh/id_ed25519"  # identity file, if needed
