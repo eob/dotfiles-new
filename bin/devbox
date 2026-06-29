@@ -18,6 +18,17 @@ set -euo pipefail
 port="${DEVBOX_PORT:-443}"
 mosh_port="${DEVBOX_MOSH_PORT:-443}"
 
+# mosh-server binds a single fixed UDP port (mosh_port). A server from a previous
+# session that lost its client keeps holding it, so a new connection dies with
+# "bind: Address already in use / Did not find mosh server startup message".
+# Sole-user box + zellij persists the real session, so reap stale mosh-servers
+# first; the detached zellij session survives and resumes on reconnect.
+reap_opts=(-p "${port}")
+[[ -n "${DEVBOX_SSH_KEY:-}" ]] && reap_opts+=(-i "${DEVBOX_SSH_KEY}")
+ssh "${reap_opts[@]}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" \
+  'pkill -INT mosh-server 2>/dev/null; sleep 0.3; pkill -KILL mosh-server 2>/dev/null; true' \
+  || true
+
 # mosh bootstraps over ssh; point that ssh at our TCP port (+ key if set).
 ssh_cmd="ssh -p ${port}"
 [[ -n "${DEVBOX_SSH_KEY:-}" ]] && ssh_cmd+=" -i ${DEVBOX_SSH_KEY}"
