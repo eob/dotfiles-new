@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
-# devbox-ssh — plain SSH to the devbox over TCP (captive / airplane-wifi
-# friendly), with the dev-server ports forwarded onto this machine.
+# devbox-fwd — forward-only SSH tunnel to the devbox, to run *alongside* `devbox`.
 #
-# Fixes the recurring
+# mosh (what `devbox` uses) has no port forwarding — it's a fundamental mosh
+# limitation, not a config gap. So when you're in over mosh, hitting
+# localhost:3000 on this machine reaches nothing. Run `devbox-fwd` in a second
+# terminal to carry the dev-server ports over a plain SSH tunnel while mosh
+# keeps driving your shell. No remote shell is opened (-N); it just forwards.
+#
+# Reaps the same stale-forwarder failure devbox-ssh handles:
 #   bind [127.0.0.1]:5173: Address already in use
 #   channel_setup_fwd_listener_tcpip: cannot listen to port: 5173
-#   Could not request local forwarding.
-# error: a *previous* devbox-ssh session whose network dropped (laptop sleep,
-# wifi change — the mosh use case) can keep holding these local ports. Before
-# connecting we reap that stale forwarder (sole-user box, so killing it is fine),
-# then connect with ExitOnForwardFailure so a genuinely-blocked port fails loudly
-# instead of limping along forwarding nothing.
+# A previous tunnel whose network dropped (sleep / wifi change) can keep holding
+# these local ports; we kill only our own stale ssh forwarders before binding,
+# then connect with ExitOnForwardFailure so a genuinely-blocked port fails loudly.
 #
 # Connection details come from ~/.zshrc.local (kept out of the repo):
 #   DEVBOX_IP        required — devbox public IP/host
@@ -19,8 +21,7 @@
 #   DEVBOX_SSH_KEY   optional — identity file for ssh
 #
 # Usage:
-#   devbox-ssh            # interactive shell, dev ports forwarded
-#   devbox-ssh <cmd...>   # run a command on the box instead of a shell
+#   devbox-fwd        # forward dev ports, stay attached until Ctrl-C
 set -euo pipefail
 
 : "${DEVBOX_IP:?set DEVBOX_IP in ~/.zshrc.local}"
@@ -46,7 +47,7 @@ port_listeners() {
 # happens to sit on a forwarded port; only our own stale tunnels.
 is_ssh() { [[ "$(ps -p "$1" -o comm= 2>/dev/null)" == *ssh ]]; }
 
-# Reap stale devbox-ssh forwarders still holding our local ports.
+# Reap stale forwarders still holding our local ports.
 reap_stale_forwards() {
   local p pid killed=0
   for p in "${PORTS[@]}"; do
@@ -71,6 +72,7 @@ for p in "${PORTS[@]}"; do
 done
 
 ssh_opts=(
+  -N                              # no remote shell — forward only
   -p "${port}"
   -o ServerAliveInterval=20
   -o ServerAliveCountMax=3
@@ -79,4 +81,5 @@ ssh_opts=(
 )
 [[ -n "${DEVBOX_SSH_KEY:-}" ]] && ssh_opts+=(-i "${DEVBOX_SSH_KEY}")
 
-exec ssh "${ssh_opts[@]}" "${forwards[@]}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" "$@"
+echo "devbox-fwd: forwarding ${PORTS[*]} — Ctrl-C to stop" >&2
+exec ssh "${ssh_opts[@]}" "${forwards[@]}" "${DEVBOX_USERNAME}@${DEVBOX_IP}"
