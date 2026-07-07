@@ -32,7 +32,7 @@ port="${DEVBOX_PORT:-443}"
 # NOTE: the kayad daemon ports (5292/5293) are deliberately NOT forwarded — kaya
 # must run against a LOCAL daemon on this machine. Tunneling them makes `kaya`
 # reach the devbox's daemon, which can't see your local files ("File not found").
-PORTS=(8080 5173 3000 8000 6006)
+PORTS=(8080 5173 3000 8000 6006 5290)
 
 # PIDs LISTENing on a given local TCP port (lsof preferred, fuser fallback).
 port_listeners() {
