@@ -8,7 +8,8 @@
 # Optional parameters:
 # @raycast.icon 💡
 
-ELGATO_LIGHT_HOST="192.168.1.64"
+# Set ELGATO_LIGHT_HOST to your Elgato Key Light's LAN IP (e.g. in ~/.zshrc.local).
+ELGATO_LIGHT_HOST="${ELGATO_LIGHT_HOST:-192.168.1.2}"
 QUERY=${1:-toggle}
 
 if [[ $QUERY = toggle ]]; then

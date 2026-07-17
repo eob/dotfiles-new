@@ -1,49 +1,44 @@
--- Kaya Language Support (Tree-sitter Syntax Highlighting & Language Server Protocol)
+-- Kaya language support: tree-sitter syntax highlighting for .kaya files.
+--
+-- NOTE: the Kaya LSP is not published yet. When it is, add a
+-- `neovim/nvim-lspconfig` spec here pointing `cmd` at the published server
+-- (npm binary / npx), NOT a machine-specific path.
 return {
-  -- 1. Set up Filetype Detection for .kaya files
+  -- 1. Filetype detection + tree-sitter parser for .kaya files.
+  --
+  -- nvim-treesitter is on the `main` branch (v1.0 rewrite). It reloads its
+  -- parsers table from disk on every update, which wipes a direct
+  -- `parsers.kaya = {...}` assignment (the snippet in the mirror repo's README
+  -- is for the old `master` API and does NOT work here). The sanctioned way is
+  -- to (re)register inside a `User TSUpdate` autocmd — the plugin fires that
+  -- event right before it reads the parser list, so the entry is always present.
   {
     "nvim-treesitter/nvim-treesitter",
     opts = function(_, opts)
       opts = opts or {}
-      -- Automatically detect .kaya files as the 'kaya' filetype
-      vim.filetype.add({
-        extension = {
-          kaya = "kaya",
-        },
+
+      -- Detect .kaya files as the 'kaya' filetype.
+      vim.filetype.add({ extension = { kaya = "kaya" } })
+
+      -- Register the custom parser (mirror of the Kaya monorepo grammar).
+      -- `main` compiles src/parser.c automatically, so no `files` key is needed.
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "TSUpdate",
+        callback = function()
+          require("nvim-treesitter.parsers").kaya = {
+            install_info = {
+              url = "https://github.com/eob/kaya-nvim-treesitter",
+              branch = "main",
+            },
+          }
+        end,
       })
+
+      -- Install kaya alongside the rest (opts_extend merges this list).
+      opts.ensure_installed = opts.ensure_installed or {}
+      table.insert(opts.ensure_installed, "kaya")
+
       return opts
     end,
-  },
-
-  -- 2. Extend nvim-lspconfig to configure the editor-agnostic Kaya LSP
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      servers = {
-        kaya = {
-          -- Execute using node from the compiled package output
-          cmd = { "node", "/mnt/disks/data/kaya-web/robotbookclub-prod/packages/kaya_vscode_server/out/server.js", "--stdio" },
-          filetypes = { "kaya" },
-          root_dir = function(fname)
-            local util = require("lspconfig.util")
-            return util.root_pattern(".git")(fname) or vim.fn.getcwd()
-          end,
-          single_file_support = true,
-        },
-      },
-      setup = {
-        kaya = function(_, opts)
-          local configs = require("lspconfig.configs")
-          -- Dynamically define the custom 'kaya' server schema in lspconfig
-          if not configs.kaya then
-            configs.kaya = {
-              default_config = opts,
-            }
-          end
-          -- Return false to let LazyVim's default setup logic complete the initialization
-          return false
-        end,
-      },
-    },
   },
 }

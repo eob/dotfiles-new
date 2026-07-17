@@ -26,14 +26,3 @@ install:
 update/kitty:
 	wget "https://raw.githubusercontent.com/dexpota/kitty-themes/master/themes/gruvbox_dark.conf" \
 		-P ~/.config/kitty/kitty-themes/themes
-
-.PHONY: install/listen-on-camera
-install/listen-on-camera:
-	- mkdir -p ~/Library/Kern.io
-	- mkdir -p ~/Library/LaunchAgents
-	- ln -is $(CWD)/automation/io.kern.listen-on-camera.plist ~/Library/LaunchAgents/io.kern.listen-on-camera.plist
-	- launchctl load ~/Library/LaunchAgents/io.kern.listen-on-camera.plist
-
-.PHONY: install/listen-on-camera/upload
-install/listen-on-camera/unload:
-	- launchctl unload ~/Library/LaunchAgents/io.kern.listen-on-camera.plist

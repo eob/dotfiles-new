@@ -1,5 +1,5 @@
 # zshrc — cross-platform, runtime-detected
-# Managed by kern/dotfiles
+# Managed by eob/dotfiles
 
 _OS="$(uname)"
 
@@ -63,6 +63,7 @@ autoload -U bashcompinit && bashcompinit
 # aliases
 alias vim=nvim
 function v() { nvim ${1:-.}; }
+alias f=fzf   # fuzzy-find files in the current tree
 alias gs='git status -sb'
 alias gcob='git checkout -b'
 alias gco='git checkout'
@@ -154,7 +155,7 @@ function fastrebase() {
       return
     fi
   fi
-  git branch kern/backups/$(date +%s)
+  git branch eob/backups/$(date +%s)
   git reset --soft "$MERGE_BASE"
   git commit -n --edit -m"$(git log --format=%B --reverse HEAD..HEAD@{1})"
   git rebase "$UPSTREAM_BRANCH"
@@ -173,7 +174,7 @@ function irebase() {
       return
     fi
   fi
-  git branch kern/backups/$(date +%s)
+  git branch eob/backups/$(date +%s)
   git rebase -i "$UPSTREAM_BRANCH"
 }
 
@@ -211,13 +212,6 @@ fi
 # local overrides
 [[ -f "${HOME}/.zshrc.local" ]] && source "${HOME}/.zshrc.local"
 
-# bun completions
-[ -s "/home/ted/.bun/_bun" ] && source "/home/ted/.bun/_bun"
-
-
-# Added by Antigravity CLI installer
-export PATH="/home/ted/.local/bin:$PATH"
-
 # Auto-start zellij when connecting via mosh: attach to (or create) the default
 # session. Detects mosh by walking the process tree for mosh-server. Skips if
 # already inside zellij ($ZELLIJ), non-interactive, or zellij isn't installed.
@@ -231,3 +225,7 @@ if [[ -o interactive && -z "${ZELLIJ:-}" ]] && command -v zellij &>/dev/null; th
   done
   unset _ppid
 fi
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"

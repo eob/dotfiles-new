@@ -48,7 +48,7 @@ l → eza (or exa/ls fallback)
 
 ### Git Hacks
 
-fastrebase [upstream] — squashes all commits since the merge-base into one, backs up the branch to kern/backups/<timestamp>, then rebases onto upstream. Default upstream: origin/master.
+fastrebase [upstream] — squashes all commits since the merge-base into one, backs up the branch to eob/backups/<timestamp>, then rebases onto upstream. Default upstream: origin/master.
 irebase [upstream] — same backup safety + interactive rebase from merge-base.
 Both stash automatically if dirty. The backup branch is your escape hatch.
 

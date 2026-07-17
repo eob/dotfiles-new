@@ -14,7 +14,7 @@ editor = nvim
 whitespace = nowarn
 
 [github]
-user = kern
+user = eob
 
 [mergetool]
 keepBackup = false

@@ -1,7 +1,7 @@
 #!/bin/sh
 # base16-shell (https://github.com/chriskempson/base16-shell)
 # Base16 Shell template by Chris Kempson (http://chriskempson.com)
-# Tokyo Night Dark scheme (terminal palette) — vendored into kern/dotfiles
+# Tokyo Night Dark scheme (terminal palette) — vendored into eob/dotfiles
 # because upstream base16-shell ships no Tokyo Night scheme. Sourced from
 # zshrc so the shell's 16 ANSI colors match the Zellij/nvim Tokyo Night theme.
 export BASE16_THEME=tokyo-night-dark
