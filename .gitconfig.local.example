@@ -1,0 +1,30 @@
+# ~/.gitconfig.local — per-host git identity + signing, NOT tracked in git.
+# Copy to ~/.gitconfig.local and fill in. Included LAST by git/gitconfig, so
+# these values override the shared config.
+
+[user]
+	name = Your Name
+	email = you@example.com
+
+# --- commit signing (SSH keys) ---------------------------------------------
+# Reuses your existing SSH key — no GPG needed. `commit.gpgsign = true` already
+# lives in the shared gitconfig, so setting these turns on signed commits.
+#
+#   signingkey : path to your PUBLIC ssh key
+#   gpg.format : ssh  (sign with ssh-keygen instead of gpg)
+	signingkey = ~/.ssh/id_ed25519.pub
+
+[gpg]
+	format = ssh
+
+# Local verification of SSH signatures (`git log --show-signature`).
+# Create the allowed_signers file with one line per identity:
+#   mkdir -p ~/.config/git
+#   printf '%s %s\n' "you@example.com" "$(cut -d" " -f1,2 ~/.ssh/id_ed25519.pub)" \
+#     > ~/.config/git/allowed_signers
+[gpg "ssh"]
+	allowedSignersFile = ~/.config/git/allowed_signers
+
+# Also add the PUBLIC key to GitHub as a *Signing Key* (Settings > SSH and GPG
+# keys > New SSH key > Key type: Signing Key) so commits show as "Verified".
+# The same key can be registered for both auth and signing.
