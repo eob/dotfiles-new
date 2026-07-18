@@ -1,7 +1,27 @@
 #!/bin/bash
-# Install CLI tools on Linux (apt + curl)
+# Install CLI tools on Linux. Supports Arch (pacman, e.g. Omarchy) and
+# Debian/Ubuntu (apt + curl).
 set -euo pipefail
 
+# ---- Arch / Omarchy (pacman) ----------------------------------------------
+# Most of these ship with Omarchy already; --needed skips anything present.
+if command -v pacman &>/dev/null; then
+  echo "Detected pacman (Arch/Omarchy)."
+  sudo pacman -S --needed --noconfirm \
+    zsh \
+    zsh-completions \
+    zsh-syntax-highlighting \
+    zsh-autosuggestions \
+    zellij \
+    git-delta \
+    fzf \
+    zoxide \
+    eza
+  echo "Arch CLI tools ready."
+  exit 0
+fi
+
+# ---- Debian / Ubuntu (apt) ------------------------------------------------
 apt_updated=false
 apt_update_once() {
   if [[ "$apt_updated" == false ]]; then

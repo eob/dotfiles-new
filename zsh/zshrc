@@ -25,10 +25,19 @@ fi
 
 # zsh plugins
 if [[ "$_OS" == "Linux" ]]; then
-  [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] \
-    && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-  [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] \
-    && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  # Distro paths differ: Arch installs under /usr/share/zsh/plugins/, Debian/
+  # Ubuntu under /usr/share/<plugin>/. Source whichever exists first.
+  for _p in \
+    /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh; do
+    [[ -f "$_p" ]] && { source "$_p"; break; }
+  done
+  for _p in \
+    /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh; do
+    [[ -f "$_p" ]] && { source "$_p"; break; }
+  done
+  unset _p
 elif [[ "$_OS" == "Darwin" ]]; then
   if [[ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -40,6 +49,12 @@ elif [[ "$_OS" == "Darwin" ]]; then
   elif [[ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
     source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   fi
+fi
+
+# mise (runtime version manager). Omarchy uses mise to manage node/ruby/python
+# toolchains; activating it here gives per-directory version switching + shims.
+if command -v mise &>/dev/null; then
+  eval "$(mise activate zsh)"
 fi
 
 # base16
@@ -207,6 +222,16 @@ fi
 # python3 (macOS homebrew)
 if [[ "$_OS" == "Darwin" && -d "/opt/homebrew/opt/python/libexec/bin" ]]; then
   export PATH="/opt/homebrew/opt/python/libexec/bin:${PATH}"
+fi
+
+# Omarchy shell helpers. Omarchy ships handy functions (ga = git-worktree add,
+# fip/dip = ssh port-forwarding, compress/decompress, iso2sd, etc.) in its bash
+# defaults. They're POSIX-ish and load fine in zsh. Sourced only when present.
+if [[ -d "${HOME}/.local/share/omarchy/default/bash/fns" ]]; then
+  for _f in "${HOME}/.local/share/omarchy/default/bash/fns"/*; do
+    [[ -r "$_f" ]] && source "$_f"
+  done
+  unset _f
 fi
 
 # local overrides
