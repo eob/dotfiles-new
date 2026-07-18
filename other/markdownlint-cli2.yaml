@@ -1,0 +1,7 @@
+# Global markdownlint-cli2 config.
+# Symlinked to ~/.markdownlint-cli2.yaml (see Makefile).
+# markdownlint-cli2 walks up from the linted file, so this applies to
+# any markdown edited under $HOME (nvim linting + CLI use).
+config:
+  # MD013 = line-length. Disabled: prose lines can be as long as they want.
+  MD013: false

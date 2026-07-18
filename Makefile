@@ -13,6 +13,7 @@ install:
 	- ln -is $(CWD)/zellij/layouts/default.kdl ~/.config/zellij/layouts/default.kdl
 	- ln -is $(CWD)/zsh/zshrc ~/.zshrc
 	- ln -is $(CWD)/other/hushlogin ~/.hushlogin
+	- ln -is $(CWD)/other/markdownlint-cli2.yaml ~/.markdownlint-cli2.yaml
 	- ln -is $(CWD)/git/gitignore ~/.gitignore
 	- cp -n $(CWD)/git/gitconfig ~/.gitconfig
 	- ln -is $(CWD)/alacritty/alacritty.yml ~/.config/alacritty/alacritty.yml
