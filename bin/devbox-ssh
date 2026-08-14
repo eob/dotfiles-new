@@ -15,7 +15,7 @@
 # Connection details come from ~/.zshrc.local (kept out of the repo):
 #   DEVBOX_IP        required — devbox public IP/host
 #   DEVBOX_USERNAME  required — ssh username
-#   DEVBOX_PORT      optional — SSH TCP port (default 443)
+#   DEVBOX_PORT      optional — SSH TCP port (default 22)
 #   DEVBOX_SSH_KEY   optional — identity file for ssh
 #
 # Usage:
@@ -25,7 +25,7 @@ set -euo pipefail
 
 : "${DEVBOX_IP:?set DEVBOX_IP in ~/.zshrc.local}"
 : "${DEVBOX_USERNAME:?set DEVBOX_USERNAME in ~/.zshrc.local}"
-port="${DEVBOX_PORT:-443}"
+port="${DEVBOX_PORT:-22}"
 
 # Local<->remote forwards (thisMachine:PORT -> devbox:PORT).
 # NOTE: the kayad daemon ports (5292/5293) are deliberately NOT forwarded — kaya

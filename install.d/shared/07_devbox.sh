@@ -16,8 +16,8 @@ cat >>"$LOCAL" <<'EOF'
 # Fill these in, then `source ~/.zshrc`.
 export DEVBOX_IP=""          # devbox public IP / host
 export DEVBOX_USERNAME=""    # ssh username
-# export DEVBOX_PORT=443           # SSH TCP port  (default 443)
-# export DEVBOX_MOSH_PORT=443      # mosh UDP port (default 443)
+# export DEVBOX_PORT=22            # SSH TCP port  (default 22)
+# export DEVBOX_MOSH_PORT=60001    # fixed mosh UDP port (default: mosh picks in 60000–61000)
 # export DEVBOX_SSH_KEY="$HOME/.ssh/id_ed25519"
 EOF
 

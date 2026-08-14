@@ -8,19 +8,20 @@
 # Connection details come from ~/.zshrc.local (kept out of the repo):
 #   DEVBOX_IP         required — devbox public IP/host
 #   DEVBOX_USERNAME   required — ssh username
-#   DEVBOX_PORT       optional — SSH/bootstrap TCP port (default 443)
-#   DEVBOX_MOSH_PORT  optional — mosh UDP port          (default 443)
+#   DEVBOX_PORT       optional — SSH/bootstrap TCP port (default 22)
+#   DEVBOX_MOSH_PORT  optional — fixed mosh UDP port (default: mosh picks a free
+#                     one in its standard 60000–61000 range)
 #   DEVBOX_SSH_KEY    optional — identity file for ssh
 set -euo pipefail
 
 : "${DEVBOX_IP:?set DEVBOX_IP in ~/.zshrc.local}"
 : "${DEVBOX_USERNAME:?set DEVBOX_USERNAME in ~/.zshrc.local}"
-port="${DEVBOX_PORT:-443}"
-mosh_port="${DEVBOX_MOSH_PORT:-443}"
+port="${DEVBOX_PORT:-22}"
+mosh_port="${DEVBOX_MOSH_PORT:-}"
 
-# mosh-server binds a single fixed UDP port (mosh_port). A server from a previous
-# session that lost its client keeps holding it, so a new connection dies with
-# "bind: Address already in use / Did not find mosh server startup message".
+# A mosh-server from a previous session that lost its client lingers, holding
+# its UDP port — fatal with a fixed DEVBOX_MOSH_PORT ("bind: Address already in
+# use / Did not find mosh server startup message"), and clutter otherwise.
 # Sole-user box + zellij persists the real session, so reap stale mosh-servers
 # first; the detached zellij session survives and resumes on reconnect.
 reap_opts=(-p "${port}")
@@ -34,5 +35,10 @@ ssh_cmd="ssh -p ${port}"
 [[ -n "${DEVBOX_SSH_KEY:-}" ]] && ssh_cmd+=" -i ${DEVBOX_SSH_KEY}"
 
 # 24h server-side timeout so a slept/roamed session lingers instead of dying.
-exec env MOSH_SERVER_NETWORK_TMOUT=86400 \
-  mosh --ssh="${ssh_cmd}" -p "${mosh_port}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" "$@"
+if [[ -n "${mosh_port}" ]]; then
+  exec env MOSH_SERVER_NETWORK_TMOUT=86400 \
+    mosh --ssh="${ssh_cmd}" -p "${mosh_port}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" "$@"
+else
+  exec env MOSH_SERVER_NETWORK_TMOUT=86400 \
+    mosh --ssh="${ssh_cmd}" "${DEVBOX_USERNAME}@${DEVBOX_IP}" "$@"
+fi
