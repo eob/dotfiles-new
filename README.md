@@ -3,10 +3,11 @@
 ## Dotfiles included
 
 * **.config/nvim**: neovim configuration
-* **zellij**: terminal multiplexer (uses built-in defaults — no config file)
+* **zellij**: terminal multiplexer (defaults + theme + copy/paste settings, see `zellij/config.kdl`)
 * **.gitignore**: global git ignore for macOS
 * **.gitconfig**: git and GitHub configuration
 * **.hushlogin**: no MOTD
+* **skills**: modular AI agent skills (Claude Code, Google Antigravity, etc.)
 
 ## Usage
 
@@ -31,6 +32,17 @@ shift+enter → literal newline
 Native zellij defaults: Ctrl-p (pane mode), Ctrl-t (tab mode), Ctrl-n (resize),
 Ctrl-s (scroll/search), Ctrl-o (session), Ctrl-q (quit). Alt+h/j/k/l move
 focus between panes; Alt+n opens a new pane.
+
+### Copy & paste (zellij on the devbox, over mosh)
+
+- Paste into a pane: Ctrl+Shift+V (or Omarchy's Super+V).
+- Copy from a pane: drag-select with the mouse, then **Alt+c**. Selecting alone
+  no longer copies — zellij 0.44.x can re-copy pane text on mere mouse
+  movement and clobber the clipboard (why in `zellij/config.kdl`).
+- Hold **Shift** while dragging to select with the terminal itself instead of
+  zellij (spans pane borders; Ctrl+Shift+C / middle-click then work as usual).
+- Both directions use OSC 52 / bracketed paste through mosh: mosh >= 1.4 on
+  both ends, and the terminal must allow OSC 52 clipboard writes.
 
 ### Shortcuts
 

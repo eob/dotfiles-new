@@ -22,6 +22,7 @@ install:
 	- $(CURDIR)/scripts/macos-defaults.sh
 	- $(CURDIR)/scripts/brew-install.sh
 	- $(CURDIR)/scripts/go-install.sh
+	- bash $(CURDIR)/install.d/shared/08_agent_skills.sh
 
 .PHONY: update/kitty
 update/kitty:
