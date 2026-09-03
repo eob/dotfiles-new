@@ -20,6 +20,7 @@ skills/
 | Skill | Description |
 | :--- | :--- |
 | [`write-pr-description`](./write-pr-description/SKILL.md) | Standard guide and template for writing clear, concise, expert-level PR descriptions and pre-PR comment hygiene. |
+| [`do-good-research`](./do-good-research/SKILL.md) | Plan, conduct, and present evidence-backed, auditable technical research. |
 | [`codex`](./codex/SKILL.md) | Invoke OpenAI Codex CLI (`codex`) for second opinions, adversarial reviews, and task delegation. |
 | [`opencode`](./opencode/SKILL.md) | Invoke OpenCode CLI (`opencode`) for headless execution, multi-model agent runs, and PR checkouts. |
 
