@@ -1,5 +1,36 @@
 // Zellij config — intentionally minimal.
-// Only the theme is overridden; every other setting uses zellij's defaults.
+// Only the theme and the copy/paste settings below are overridden; every other
+// setting uses zellij's defaults.
+
+// ---- Copy / paste ---------------------------------------------------------
+// This zellij usually runs on the devbox, reached from Omarchy (Ghostty) over
+// mosh. The clipboard is written with OSC 52 — the only mechanism that works
+// for a remote (mosh/ssh) session; it needs mosh >= 1.4 on both ends and a
+// terminal that honors OSC 52 writes (Ghostty: clipboard-write = allow, the
+// default). Pasting rides bracketed paste the same way.
+//
+// copy_on_select false: zellij 0.44.x copies the mouse selection to the
+//   clipboard on every left-button release, and a known bug
+//   (zellij-org/zellij#5488) can leave a selection "stuck" so that merely
+//   moving or clicking the mouse over a pane re-copies pane text — silently
+//   overwriting whatever was copied elsewhere, so Ctrl+Shift+V pastes stale
+//   terminal output (or nothing) instead. With this off, nothing reaches the
+//   clipboard unless asked for: drag-select, then Alt+c (bound below).
+//   Hold Shift while dragging to bypass zellij and select with the terminal
+//   itself (spans pane borders; Ctrl+Shift+C / middle-click then apply).
+// mouse_hover_effects false: no hover highlight, less mouse-motion traffic
+//   over mosh. (0.44.x still emits ?1003h regardless — zellij#5192.)
+copy_on_select false
+copy_clipboard "system"
+mouse_hover_effects false
+
+keybinds {
+    shared_except "locked" {
+        bind "Alt c" { Copy; }
+    }
+}
+
+// ---- Theme ----------------------------------------------------------------
 // "deep-blue" is a custom deep-navy palette — bg is a saturated blue so the
 // tab bar, status bar, and pane frames read clearly blue against Ghostty's
 // (unchanged) Catppuccin background. Defined inline so it travels with the

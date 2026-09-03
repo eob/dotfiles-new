@@ -65,3 +65,9 @@ program = gpg
 # This must be the LAST include directive so its values override the ones above.
 [include]
 path = ~/.gitconfig.local
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential

@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# osc52 — copy text to the *local* (host) clipboard from a remote shell via the
+# OSC 52 escape sequence, i.e. "pbcopy over ssh/mosh". Works through zellij and
+# mosh (>= 1.4) as long as the host terminal honors OSC 52 writes.
+#
+#   osc52 some text         # copy the arguments
+#   some-cmd | osc52        # copy stdin
+#   osc52                   # (no args, tty stdin) copies a timestamped marker —
+#                           # handy to test whether the copy path works at all
+set -euo pipefail
+
+if (( $# > 0 )); then
+  text="$*"
+elif [[ ! -t 0 ]]; then
+  text="$(cat)"
+else
+  text="osc52 test $(date '+%H:%M:%S') from $(hostname)"
+  echo "copying marker: \"$text\" — now paste somewhere on the host" >&2
+fi
+
+# mosh (1.4.0) caps an OSC string at 16 KiB (MAXIMUM_CLIPBOARD_SIZE); longer
+# payloads are silently truncated on the way through, so warn.
+b64="$(printf '%s' "$text" | base64 -w0)"
+if (( ${#b64} > 16000 )) && pgrep -x mosh-server >/dev/null 2>&1; then
+  echo "osc52: warning: ${#b64} base64 chars; mosh truncates OSC strings past 16 KiB — copy may be cut off" >&2
+fi
+
+printf '\033]52;c;%s\033\\' "$b64" > /dev/tty
