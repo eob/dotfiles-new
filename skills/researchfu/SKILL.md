@@ -140,3 +140,7 @@ Before delivery, ask whether a skeptical reader can tell what is known, how it
 is known, what remains unknown, what could overturn the conclusion, and what to
 do next. When practical, include a few fast, read-only checks with expected
 results and falsifiers so the reader can see whether the research is still true.
+
+## Publishing Durable Research via `reportfu`
+
+When research briefs, evidence catalogs, or architectural comparisons are too extensive for the chat window or carry durable value across projects, publish the complete artifact to `$BRAIN_REPO` using **`reportfu`**. Orient using `$BRAIN_REPO/AGENTS.md`, commit cleanly, provide a concise executive summary in chat, and point the user directly to the filed document (`"I've left a report for you here: ..."`).
