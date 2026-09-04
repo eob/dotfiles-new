@@ -24,6 +24,7 @@ skills/
 | [`debugfu`](./debugfu/SKILL.md) | Systematic root-cause debugging: Hypothesis-driven 4-phase diagnostic investigation (Isolate → Observe → Prove → Remedy). |
 | [`simplifyfu`](./simplifyfu/SKILL.md) | Code simplification & anti-bloat: Post-implementation audit to strip accidental complexity, YAGNI bloat, and dead scaffolding. |
 | [`researchfu`](./researchfu/SKILL.md) | Evidence-backed technical research: Plan, conduct, and present auditable technical research for consequential decisions. |
+| [`reportfu`](./reportfu/SKILL.md) | Global brain repository protocol: High-level protocol for filing research, technical reports, and durable knowledge into a context-specific brain repo via `$BRAIN_REPO` and `AGENTS.md`. |
 
 ## Integration & Discovery
 
