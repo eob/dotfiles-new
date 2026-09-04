@@ -2,24 +2,24 @@
 name: workfu
 description: >-
   Disciplined development execution workflow for AI coding agents. Enforces Red-first validation
-  (proving absence or reproduction before implementing), dynamic planning, sub-agent fan-out,
-  turning Red to Green, verifying full acceptability criteria, in-flight behavior pinning,
-  concise documentation, and filing out-of-scope defects via ticketfu.
+  (capturing verbatim failure evidence and verifying reversibility), dynamic planning, sub-agent fan-out,
+  turning Red to Green, structured validation gate matrices, A/B control testing for flakiness,
+  symmetric failure pinning, durable findings capture, and filing out-of-scope defects via ticketfu.
   Use when planning, implementing, debugging, or verifying features and fixes.
 ---
 
 # Workfu: Disciplined Agent Execution Workflow
 
-**Workfu** is the operating discipline for planning, implementing, and verifying changes in codebases. It ensures that every code change is proven necessary before it is written, verified through durable checks, executed systematically through structured plans and sub-agents, and kept free from scope creep.
+**Workfu** is the operating discipline for planning, implementing, and verifying changes in production codebases. It ensures that every code change is proven necessary before it is written, verified through durable checks and verifiable gate matrices, guarded against pre-existing flakiness through A/B control tests, and documented with durable architectural findings.
 
 ---
 
 ## The Workfu Cycle
 
 ```text
-[1. Red First] ──> [2. Plan & Track] ──> [3. Fan Out] ──> [4. Green + Criteria] ──> [5. Pin Invariants] ──> [6. Tidy & Document]
-  Prove absence /     Decision-complete    Sub-agents for   Red turns Green;          Pin newly noticed       Concise docs;
-  reproduce failure   dynamic plan         parallel work    satisfy all criteria      edge cases with tests   file out-of-scope
+[1. Red First] ──> [2. Plan & Track] ──> [3. Fan Out] ──> [4. Green & Gate] ──> [5. Pin Invariants] ──> [6. Durable Records]
+  Verbatim failure   Decision-complete    Sub-agents for   Red turns Green;          Pin symmetric edge      Gate matrix, A/B
+  evidence captured  dynamic plan         parallel work    pass gate matrix          cases with tests        findings, ticketfu
 ```
 
 ---
@@ -30,22 +30,38 @@ When asked to implement a new feature, fix a bug, update a schema, or alter beha
 
 Begin by proving that the requested behavior is currently absent or failing:
 
-### The Durable Proof Standard
+### 1.1 The Durable Proof Standard
 - **Write a test first**: Create a unit test, integration test, or conformance check that asserts the desired functionality or exposes the defect.
 - **Run the test and confirm it fails (RED)**:
-  - Verify that it fails for the **expected reason** (e.g., missing method, incorrect return value, schema refusal), not because of a syntax error, broken import, or malformed fixture.
+  - Verify that it fails for the **expected causal reason** (e.g., missing method, incorrect return value, schema refusal, wrong status code), not because of a syntax error, broken import, or malformed test fixture.
 - **Why this is non-negotiable**:
   - Proves the problem actually exists.
   - Guards against writing tests that pass by coincidence (tautologies).
   - Establishes a concrete, unambiguous target for completion.
 
-### Alternative Forms of "Red"
+### 1.2 Capture Verbatim Red Evidence
+Do not simply report that the test failed. **Record the verbatim failure output** directly in the ticket or planning notes:
+```text
+---- poisoning_run_thread_panic_finalizes_the_session ----
+assertion `left == right` failed: a panicked native session must stay visible at the front
+  left: 404
+ right: 200
+test result: FAILED. 0 passed; 1 failed; 168 filtered out
+```
+This failure trace serves as auditable proof of the original failure mode.
+
+### 1.3 Pin Against Symmetric & Boundary Failure Modes
+Avoid superficial, one-sided checks (e.g., merely testing `assert result is not None` or `assert status == 200`):
+- **Test the symmetric inverse**: If testing that an item is preserved across restarts, test that it is consumed **exactly once**, not twice (testing duplication and starvation).
+- **Test refusal of invalid inputs**: If asserting valid data decodes, test that invalid tags or missing fields are explicitly refused rather than silently defaulting.
+- **Test anchor boundaries**: If validating regex or JSON Schema patterns, test that unanchored prefixes or suffixes are rejected.
+
+### 1.4 Alternative Forms of "Red"
 When automated unit tests are impractical (e.g., CLI exit codes, build configurations, wire protocol probes, daemon signals, infrastructure scripts):
 - Formulate an explicit, reproducible check:
   - A CLI invocation asserting a non-zero exit code or missing flag output.
   - A `curl` or HTTP probe asserting a specific HTTP status or error payload.
   - A minimal standalone reproduction script.
-  - An unanchored schema pattern or serialization check.
 - Record the exact failure output before writing the solution.
 
 ---
@@ -60,7 +76,7 @@ Once the Red case is established, construct a plan before executing:
      - The Red test / check.
      - The files requiring modification.
      - Any dependent regenerations, builds, or migrations.
-     - The verification steps for all acceptability criteria.
+     - The verification gates for all acceptability criteria.
 2. **Check Back In Continuously**:
    - As each step completes, update the plan immediately (mark tasks done, note findings).
    - If an unexpected blocker or discovery alters the approach, update the plan explicitly before proceeding—never drift silently from the agreed design.
@@ -82,24 +98,56 @@ Leverage sub-agents strategically to maintain a clean context window and maximiz
 
 ---
 
-## 4. Turning Red to Green & Meeting All Acceptability Criteria
+## 4. Turning Red to Green & Structured Gate Matrices
 
 Implement the changes cleanly:
 
-1. **Turn the Red Case Green**:
-   - Write the minimum viable, clean implementation to satisfy the Red test.
-   - Re-run the Red test and confirm it now passes (**GREEN**).
-2. **Satisfy Full Acceptability Criteria**:
-   - Turning the initial Red test green is necessary, but rarely sufficient.
-   - Verify all explicit and implicit requirements:
-     - Edge cases and boundary conditions handled.
-     - Backwards compatibility and wire contract guarantees preserved.
-     - Full repository test suite passes with zero regressions.
-     - Build succeeds with zero new compiler warnings or linter errors.
+### 4.1 Turn the Red Case Green
+- Write the minimum viable, clean implementation to satisfy the Red test.
+- Re-run the Red test and confirm it now passes (**GREEN**).
+
+### 4.2 The Reversion Check (Proving Causality)
+Before concluding that the fix is complete, perform a temporary reversion check:
+- Revert or stash the implementation change while keeping the new test in place.
+- Verify that the test immediately fails again with the identical Red failure signature.
+- Re-apply the implementation and confirm it returns to Green. This eliminates any possibility that an ambient environment change or stale artifact caused the test to pass.
+
+### 4.3 Structured Validation Gate Matrix
+Do not simply say "all tests pass". Record an auditable **Validation Gate Matrix** in the ticket:
+
+| Gate / Command | Base Commit | Result / Metrics |
+| :--- | :--- | :--- |
+| `cargo test -p daemon --test native_host` | `585b08acf` | **ok. 177 passed; 0 failed** (44s) |
+| `cargo test -p daemon --lib --test process` | `585b08acf` | ok: lib 128; process 1 — 0 failed |
+| `npm run generate:check` | `585b08acf` | In sync; zero drift |
+| `cargo fmt --check -p daemon` | `585b08acf` | Clean (0 diffs introduced) |
+
+Always record the specific base commit each gate was executed on, especially when rebasing onto an evolving `origin/main`.
 
 ---
 
-## 5. Behavior Pinning: Lock Down In-Flight Discoveries
+## 5. Differential A/B Control Testing for Flakiness
+
+In large, concurrent, or load-sensitive suites, tests may occasionally flake or time out. **Do not panic and do not rewrite working implementation code.**
+
+Follow the **A/B Control Testing Protocol**:
+1. When a test in the wider suite fails unexpectedly:
+   - Run the failing test in isolation.
+   - Build a control binary from an unmodified checkout of `origin/main`.
+   - Run the branch binary and the control binary **concurrently under identical machine load**:
+     ```text
+     branch  : test result: ok.     177 passed; 0 failed
+     control : test result: FAILED. 174 passed; 1 failed (deadline exceeded)
+     ```
+2. If `origin/main` exhibits the same failure under the same load:
+   - The failure is proven to be **pre-existing load sensitivity or environment flakiness**, not a regression introduced by your change.
+   - Document this evidence in the ticket under a dedicated `Flakiness` section.
+   - File an issue for the flake via `ticketfu`.
+   - Do not modify your implementation to chase ambient flakes.
+
+---
+
+## 6. Behavior Pinning: Lock Down In-Flight Discoveries
 
 As you pursue the work, you will inevitably uncover nuances, edge cases, or implicit invariants:
 
@@ -110,17 +158,29 @@ As you pursue the work, you will inevitably uncover nuances, edge cases, or impl
 
 ---
 
-## 6. Concise, Direct Documentation
+## 7. Scope Containment & Pre-Existing Drift Hygiene
 
-Any documentation, comments, or explanations generated during workfu must adhere to high standards:
+Maintain strict hygiene over code modifications and formatting:
 
-- **Concise and Direct**: State facts, constraints, and architecture plainly.
-- **Explain "Why", Not "What"**: Document non-obvious invariants and rationale. Do not narrate obvious code.
-- **Zero Agentic Fluff**: Eliminate conversational filler, apologies, and narrations of internal tool execution.
+- **Isolate Diffs to the Change**:
+  - Never allow auto-formatters or linters to reformat hundreds of lines of pre-existing drift across unrelated files.
+  - If a file has pre-existing formatting drift on `main`, format your new or modified lines by hand to produce a clean, minimal diff.
+- **Explicit Non-Goals**:
+  - State explicitly in the ticket or PR what was deliberately **not** touched (e.g., *"Per scope note, lock acquisitions outside drive() were left alone"*).
 
 ---
 
-## 7. Out-of-Scope Issues: File via `ticketfu`
+## 8. Decisions & Durable Findings
+
+Never bury critical architectural rationale solely in ephemeral conversation turns or code comments. Every completed ticket must record a **Decisions and durable findings** section:
+
+- **Invariants & Ordering**: Explicitly record concurrency invariants, lock acquisition order (e.g., `lock order is journal → mailbox everywhere`), or state machine transitions.
+- **Compatibility & Wire Contracts**: Note how wire format, migrations, or database checkpoints remain compatible with older versions.
+- **Settled Trade-offs**: Document why an alternative approach was rejected so future agents do not re-litigate settled decisions.
+
+---
+
+## 9. Out-of-Scope Issues: File via `ticketfu`
 
 While working, you will frequently notice unrelated bugs, outdated docs, missing tests, or technical debt:
 
@@ -145,10 +205,14 @@ While working, you will frequently notice unrelated bugs, outdated docs, missing
 ## Quick Reference Checklist
 
 - [ ] **Red First**: Validated absence of functionality or reproduced failure with a failing test or recorded check.
-- [ ] **Plan Created**: Decision-complete plan written with clear acceptance criteria.
+- [ ] **Verbatim Evidence Captured**: Recorded exact assertion failure output before implementing.
+- [ ] **Symmetric Modes Pinned**: Tested boundary conditions, duplicates, leaks, or refusals (not just happy paths).
+- [ ] **Plan Created & Tracked**: Decision-complete plan written and kept up to date.
 - [ ] **Sub-Agents Deployed**: Researched or fanned out parallel tasks via appropriate sub-agents where helpful.
 - [ ] **Green Verified**: Implementation completed; initial Red tests now pass.
-- [ ] **Full Criteria Met**: Edge cases, performance, and regression test suite verified.
-- [ ] **Behavior Pinned**: Added regression tests for newly noticed invariants and edge cases.
-- [ ] **Documentation Clean**: Code comments and docs are concise, direct, and free of agent artifacts.
+- [ ] **Reversion Checked**: Temporarily reverted fix to confirm test flips cleanly back to Red.
+- [ ] **Gate Matrix Recorded**: Documented command, base commit, and pass counts for all validation gates.
+- [ ] **A/B Control Tested**: If wide suites flaked, verified identical failure on unmodified `origin/main`.
+- [ ] **Diff Hygiene Preserved**: No unrelated pre-existing formatting drift included in diff.
+- [ ] **Durable Findings Recorded**: Invariants, lock orders, and settled decisions documented in ticket.
 - [ ] **Out-of-Scope Tracked**: Unrelated bugs and debt filed as tickets using `ticketfu`—no scope creep.
