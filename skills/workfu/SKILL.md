@@ -8,7 +8,7 @@ description: >-
   Use when planning, implementing, debugging, or verifying features and fixes.
 ---
 
-# Workfu: Disciplined Agent Execution Workflow
+# workfu: Disciplined Development Execution
 
 **Workfu** is the operating discipline for planning, implementing, and verifying changes in production codebases. It ensures that every code change is proven necessary before it is written, verified through durable checks and verifiable gate matrices, guarded against pre-existing flakiness through A/B control tests, and documented with durable architectural findings.
 
@@ -17,9 +17,9 @@ description: >-
 ## The Workfu Cycle
 
 ```text
-[1. Red First] ──> [2. Plan & Track] ──> [3. Fan Out] ──> [4. Green & Gate] ──> [5. Pin Invariants] ──> [6. Durable Records]
-  Verbatim failure   Decision-complete    Sub-agents for   Red turns Green;          Pin symmetric edge      Gate matrix, A/B
-  evidence captured  dynamic plan         parallel work    pass gate matrix          cases with tests        findings, ticketfu
+[1. Red First] ──> [2. Plan & Track] ──> [3. Fan Out] ──> [4. Green & Gate] ──> [5. Pin Invariants] ──> [6. Polish & PR]
+  Verbatim failure   Decision-complete    Sub-agents for   Red turns Green;          Pin symmetric edge      simplifyfu, codex,
+  evidence captured  dynamic plan         parallel work    pass gate matrix          cases with tests        prfu, durable findings
 ```
 
 ---
@@ -63,6 +63,9 @@ When automated unit tests are impractical (e.g., CLI exit codes, build configura
   - A `curl` or HTTP probe asserting a specific HTTP status or error payload.
   - A minimal standalone reproduction script.
 - Record the exact failure output before writing the solution.
+
+### 1.5 Elusive Failure Mechanisms: Invoke `debugfu`
+If the failure mechanism or root cause of a bug is non-deterministic, intermittent, or unknown (e.g., race conditions, memory corruption, subtle state desynchronization), invoke **`debugfu`** (`Isolate → Observe → Prove → Remedy`) to isolate the root cause mechanism before attempting to write the Red test.
 
 ---
 
@@ -202,6 +205,21 @@ While working, you will frequently notice unrelated bugs, outdated docs, missing
 
 ---
 
+## 10. Pre-Review Polish Pass: `simplifyfu`, `codex`, & `prfu`
+
+Before finalizing changes and marking the PR ready for review:
+
+1. **Anti-Bloat Audit (`simplifyfu`)**:
+   - Audit all modified files using **`simplifyfu`**.
+   - Inline single-use private helpers, flatten conditionals with guard clauses, enforce YAGNI, and strip out temporary scaffolding or dead code.
+2. **Second-Opinion Diff Review (`codex`)**:
+   - Optionally invoke **`codex`** (`codex review --uncommitted` or `codex review origin/main...HEAD`) for an independent adversarial second opinion on concurrency, security, and boundary edge cases.
+3. **PR Description & Comment Hygiene (`prfu`)**:
+   - Perform the pre-PR comment hygiene pass using **`prfu`** (explain "Why" not "What", remove obvious comments narrating code, eliminate agent artifacts).
+   - Draft or update the PR description following the `prfu` template (including the `Agent Metadata` block).
+
+---
+
 ## Quick Reference Checklist
 
 - [ ] **Red First**: Validated absence of functionality or reproduced failure with a failing test or recorded check.
@@ -216,3 +234,5 @@ While working, you will frequently notice unrelated bugs, outdated docs, missing
 - [ ] **Diff Hygiene Preserved**: No unrelated pre-existing formatting drift included in diff.
 - [ ] **Durable Findings Recorded**: Invariants, lock orders, and settled decisions documented in ticket.
 - [ ] **Out-of-Scope Tracked**: Unrelated bugs and debt filed as tickets using `ticketfu`—no scope creep.
+- [ ] **Code Simplified**: Audited diff with `simplifyfu` to remove YAGNI bloat and dead scaffolding.
+- [ ] **PR Polished**: Comment hygiene pass and PR description completed using `prfu`.

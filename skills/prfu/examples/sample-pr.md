@@ -1,6 +1,6 @@
 # Example PR Description
 
-Here is a realistic example of a Pull Request description written according to the `write-pr-description` standard:
+Here is a realistic example of a Pull Request description written according to the `prfu` standard:
 
 ---
 

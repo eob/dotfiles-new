@@ -1,11 +1,11 @@
 ---
-name: code-simplify
+name: simplifyfu
 description: >-
   Audit and refine recently written or modified code to remove accidental complexity, unnecessary abstractions,
   dead code, and over-engineering. Use after completing a feature or bugfix, before opening a PR or declaring a task done.
 ---
 
-# Code Simplification & Anti-Bloat
+# simplifyfu: Code Simplification & Anti-Bloat
 
 AI coding agents tend to generate defensive scaffolding, redundant wrapper functions, overly elaborate type hierarchies, and speculative abstractions. Every line of unnecessary code is a liability that must be read, maintained, and debugged by humans.
 

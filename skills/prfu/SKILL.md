@@ -1,12 +1,12 @@
 ---
-name: write-pr-description
+name: prfu
 description: >-
   Guidelines and template for writing clear, concise, expert-level Pull Request (PR) descriptions,
   including a pre-PR code comment hygiene pass. Use whenever preparing, drafting, or reviewing code
   changes and PR descriptions.
 ---
 
-# Writing a PR Description
+# prfu: Pull Request Descriptions & Comment Hygiene
 
 This skill defines the standard for drafting pull request descriptions. Follow these guidelines to produce PR descriptions that are immediately clear, technically rigorous, and respect the reviewer's time.
 
@@ -135,6 +135,12 @@ TL;DR: <Single active-voice sentence stating what this PR does>.
 - **Automated Tests**: `<test command or suite>` passed (<number of tests> passed, 0 failures).
 - **Manual Verification**: <Steps taken to manually exercise the change>.
 - **Edge Cases Tested**: <Specific boundary conditions verified>.
+
+### Agent Metadata <!-- Optional: include when working in multi-agent repositories under ticketfu -->
+- **Harness**: <claude-code | codex | muse | antigravity | opencode>
+- **Machine**: <hostname or machine location>
+- **Session ID**: `<session-or-conversation-uuid>`
+- **Ticket**: <link to ticket or ticket filename>
 
 ## Supporting Media / Data Tables <!-- Optional: delete if not applicable -->
 | Metric | Before | After | Delta |

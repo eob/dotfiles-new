@@ -1,9 +1,9 @@
 ---
-name: do-good-research
+name: researchfu
 description: Plan, conduct, and present evidence-backed technical research that answers a consequential question and makes the reasoning auditable. Use for investigations, architecture exploration, incident analysis, comparisons, unfamiliar systems, and decision support; not for simple factual lookups.
 ---
 
-# Do good research
+# researchfu: Evidence-Backed Technical Research
 
 Good research reduces uncertainty for a purpose. It learns enough of the right
 things to change what the reader can believe, predict, or do, while keeping the

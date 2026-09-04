@@ -8,7 +8,7 @@ description: >-
   Use when starting, claiming, executing, or completing work alongside other agents.
 ---
 
-# Ticketfu: Multi-Agent Collaboration Workflow
+# ticketfu: Multi-Agent Collaboration & Lifecycle Management
 
 You are one agent working alongside many in the same repository. It is essential that you work well together so agents can collaborate, integrate code cleanly, and recover work if one agent runs out of credits, exhausts its context window, or abruptly disconnects.
 
@@ -89,7 +89,7 @@ Early in the workflow, open a placeholder pull request on GitHub:
      [In Progress] <ticket-name>: <short imperative summary>
      ```
 3. **Description**:
-   - Follow the `write-pr-description` skill guidelines for structure and tone.
+   - Follow the `prfu` skill guidelines for structure and tone.
    - Summarize the high-level scope and intended solution.
    - **Explicitly include the Agent Metadata block**:
      ```markdown
@@ -179,7 +179,7 @@ Resolve any conflicts and run the test suite to confirm compatibility with the l
    ```bash
    gh pr ready
    ```
-4. Perform a pre-PR comment hygiene pass per `write-pr-description`.
+4. Perform a pre-PR comment hygiene pass per `prfu`.
 5. Allow GitHub Actions / CI checks to pass.
 6. Consult the human or merge according to repository instructions.
 

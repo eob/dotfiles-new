@@ -96,4 +96,4 @@ Use `codex exec` to delegate tasks or request focused analysis:
      - **Disagreements / False Positives**: Feedback that doesn't apply to the codebase.
 
 3. **Active Voice & Grounded References**:
-   - Maintain the standard established in `write-pr-description`: cite exact filenames, symbols, and line numbers when reporting Codex review findings to the user.
+   - Maintain the standard established in `prfu`: cite exact filenames, symbols, and line numbers when reporting Codex review findings to the user.

@@ -1,12 +1,12 @@
 ---
-name: systematic-debugging
+name: debugfu
 description: >-
   Investigate and fix software bugs using a disciplined, hypothesis-driven, four-phase root cause process.
   Use when encountering test failures, crashes, unexpected behavior, race conditions, or performance regressions.
   Never guess or apply superficial band-aids before proving the failure mechanism.
 ---
 
-# Systematic Debugging
+# debugfu: Systematic Root-Cause Debugging
 
 Debugging is an empirical investigation, not an exercise in trial and error. A bug occurs when an assumption embedded in the code diverges from operational reality. 
 
