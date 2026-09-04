@@ -1,5 +1,5 @@
 ---
-name: ticketflow
+name: ticketfu
 description: >-
   Standard workflow for multi-agent collaboration in shared repositories. Ensures seamless coordination,
   handoffs, and credit-exhaustion recovery across agent harnesses (Claude Code, Codex, Muse, Antigravity, OpenCode)
@@ -8,15 +8,15 @@ description: >-
   Use when starting, claiming, executing, or completing work alongside other agents.
 ---
 
-# Ticketflow: Multi-Agent Collaboration Workflow
+# Ticketfu: Multi-Agent Collaboration Workflow
 
 You are one agent working alongside many in the same repository. It is essential that you work well together so agents can collaborate, integrate code cleanly, and recover work if one agent runs out of credits, exhausts its context window, or abruptly disconnects.
 
-**Ticketflow** is the operating discipline for organizing work in multi-agent environments. Every task leaves an authoritative, public paper trail so that any agent or human can inspect progress, locate logs, or seamlessly take over without stranded local work.
+**Ticketfu** is the operating discipline for organizing work in multi-agent environments. Every task leaves an authoritative, public paper trail so that any agent or human can inspect progress, locate logs, or seamlessly take over without stranded local work.
 
 ---
 
-## The Ticketflow Lifecycle
+## The Ticketfu Lifecycle
 
 ```text
 [1. Ticket] ──> [2. Claim & Branch] ──> [3. Draft PR] ──> [4. Implement & WIP] ──> [5. Sync & Test] ──> [6. Review/Merge] ──> [7. Safe Teardown]

@@ -25,7 +25,8 @@ skills/
 | [`code-simplify`](./code-simplify/SKILL.md) | Post-implementation audit to strip accidental complexity, dead code, and over-engineering. |
 | [`codex`](./codex/SKILL.md) | Invoke OpenAI Codex CLI (`codex`) for second opinions, adversarial reviews, and task delegation. |
 | [`opencode`](./opencode/SKILL.md) | Invoke OpenCode CLI (`opencode`) for headless execution, multi-model agent runs, and PR checkouts. |
-| [`ticketflow`](./ticketflow/SKILL.md) | Multi-agent collaboration workflow: authoritative ticketing, traceable branch naming, placeholder draft PRs, and safe merge closures. |
+| [`ticketfu`](./ticketfu/SKILL.md) | Multi-agent collaboration workflow: authoritative ticketing, traceable branch naming, worktree awareness, draft PRs, and safe merge closures. |
+| [`workfu`](./workfu/SKILL.md) | Disciplined development execution: Red-first validation, dynamic planning, sub-agent fan-out, turning Red to Green, behavior pinning, and filing out-of-scope issues via ticketfu. |
 
 ## Integration & Discovery
 
