@@ -113,6 +113,15 @@ Early in the workflow, open a placeholder pull request on GitHub:
 
 Implement changes on your ticket branch with these multi-agent survivability habits:
 
+### Execution Discipline: Follow `workfu`
+- Follow the **`workfu`** skill for the disciplined development execution cycle:
+  - Validate Red cases first (capturing verbatim failure evidence and proving reversibility).
+  - Dynamic planning and sub-agent fan-out.
+  - Turn Red to Green, run the validation gate matrix, and verify all acceptability criteria.
+  - Pin newly uncovered invariants and symmetric failure modes with regression tests.
+  - Record architectural decisions and durable findings in the ticket.
+  - File any out-of-scope defects via `ticketfu`.
+
 ### Periodic WIP Checkpoint Commits & Pushes
 - **Never accumulate large uncommitted diffs on local disk.**
 - If an agent suddenly hits credit exhaustion, token rate limits, or crashes, dirty uncommitted files on one machine are invisible to other agents.
@@ -251,6 +260,7 @@ Use this format when storing tickets in-repo:
 - [ ] Periodic WIP commits pushed to remote branch to prevent stranded work.
 - [ ] If handed over: Handoff Memo written and all WIP pushed.
 - [ ] If taking over: Baseline tests run and verified before writing code.
+- [ ] Implementation executed using `workfu` (Red-first proof, dynamic planning, behavior pinning, gate matrix).
 - [ ] Implementation complete; branch re-synced with latest `origin/main` and tested.
 - [ ] PR title updated (stripped `[In Progress]`), marked ready for review (`gh pr ready`).
 - [ ] Remote merge confirmed; local `main` pulled (and worktree removed if used).
