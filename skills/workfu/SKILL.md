@@ -19,7 +19,7 @@ description: >-
 ```text
 [1. Red First] ──> [2. Plan & Track] ──> [3. Fan Out] ──> [4. Green & Gate] ──> [5. Pin Invariants] ──> [6. Polish & PR]
   Verbatim failure   Decision-complete    Sub-agents for   Red turns Green;          Pin symmetric edge      simplifyfu, codex,
-  evidence captured  dynamic plan         parallel work    pass gate matrix          cases with tests        prfu, durable findings
+  evidence captured  dynamic plan         parallel work    pass gate matrix          cases with tests        ticketfu, durable findings
 ```
 
 ---
@@ -205,7 +205,7 @@ While working, you will frequently notice unrelated bugs, outdated docs, missing
 
 ---
 
-## 10. Pre-Review Polish Pass: `simplifyfu`, `codex`, & `prfu`
+## 10. Pre-Review Polish Pass: `simplifyfu`, `codex`, & `ticketfu`
 
 Before finalizing changes and marking the PR ready for review:
 
@@ -214,9 +214,9 @@ Before finalizing changes and marking the PR ready for review:
    - Inline single-use private helpers, flatten conditionals with guard clauses, enforce YAGNI, and strip out temporary scaffolding or dead code.
 2. **Second-Opinion Diff Review (`codex`)**:
    - Optionally invoke **`codex`** (`codex review --uncommitted` or `codex review origin/main...HEAD`) for an independent adversarial second opinion on concurrency, security, and boundary edge cases.
-3. **PR Description & Comment Hygiene (`prfu`)**:
-   - Perform the pre-PR comment hygiene pass using **`prfu`** (explain "Why" not "What", remove obvious comments narrating code, eliminate agent artifacts).
-   - Draft or update the PR description following the `prfu` template (including the `Agent Metadata` block).
+3. **Comment Hygiene & PR Finalization (`ticketfu`)**:
+   - Perform the pre-PR comment hygiene pass per **`ticketfu`** (explain "Why" not "What", remove obvious comments narrating code, eliminate agent artifacts).
+   - Draft or update the PR description following the `ticketfu` PR template (including the `Agent Metadata` block).
 
 ---
 
@@ -235,4 +235,4 @@ Before finalizing changes and marking the PR ready for review:
 - [ ] **Durable Findings Recorded**: Invariants, lock orders, and settled decisions documented in ticket.
 - [ ] **Out-of-Scope Tracked**: Unrelated bugs and debt filed as tickets using `ticketfu`—no scope creep.
 - [ ] **Code Simplified**: Audited diff with `simplifyfu` to remove YAGNI bloat and dead scaffolding.
-- [ ] **PR Polished**: Comment hygiene pass and PR description completed using `prfu`.
+- [ ] **PR Polished**: Comment hygiene pass and PR description completed using `ticketfu`.

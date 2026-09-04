@@ -21,11 +21,10 @@ skills/
 
 | Skill | Description |
 | :--- | :--- |
-| [`ticketfu`](./ticketfu/SKILL.md) | Multi-agent collaboration & lifecycle: authoritative ticketing, traceable branch naming, worktree awareness, draft PRs, and safe merge closures. |
+| [`ticketfu`](./ticketfu/SKILL.md) | Multi-agent lifecycle & PR delivery: authoritative ticketing, traceable branch naming, worktree awareness, draft PR beacons, pre-PR comment hygiene, expert PR descriptions, and safe merge closures. |
 | [`workfu`](./workfu/SKILL.md) | Disciplined development execution: Red-first validation, dynamic planning, sub-agent fan-out, turning Red to Green, gate matrices, and behavior pinning. |
 | [`debugfu`](./debugfu/SKILL.md) | Systematic root-cause debugging: Hypothesis-driven 4-phase diagnostic investigation (Isolate → Observe → Prove → Remedy). |
 | [`simplifyfu`](./simplifyfu/SKILL.md) | Code simplification & anti-bloat: Post-implementation audit to strip accidental complexity, YAGNI bloat, and dead scaffolding. |
-| [`prfu`](./prfu/SKILL.md) | Pull request descriptions & comment hygiene: Guide and template for expert-level PR descriptions and pre-PR code comment audits. |
 | [`researchfu`](./researchfu/SKILL.md) | Evidence-backed technical research: Plan, conduct, and present auditable technical research for consequential decisions. |
 
 ### Harness CLI Connectors

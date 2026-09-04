@@ -1,27 +1,26 @@
 ---
 name: ticketfu
 description: >-
-  Standard workflow for multi-agent collaboration in shared repositories. Ensures seamless coordination,
-  handoffs, and credit-exhaustion recovery across agent harnesses (Claude Code, Codex, Muse, Antigravity, OpenCode)
-  through authoritative ticketing, traceable branch naming, worktree awareness, periodic WIP checkpoints,
-  placeholder draft PRs, structured handoff memos, and safe merge closures.
-  Use when starting, claiming, executing, or completing work alongside other agents.
+  Multi-agent collaboration lifecycle, authoritative ticketing, and expert Pull Request (PR) delivery.
+  Enforces seamless coordination, traceable branch/worktree naming, draft PR beacons, periodic WIP checkpoints,
+  handoff memos, pre-PR code comment hygiene, expert PR descriptions (zero context leakage), and safe merge closures.
+  Use when starting, claiming, executing, or completing work across agent harnesses, or when drafting and finalizing PRs.
 ---
 
-# ticketfu: Multi-Agent Collaboration & Lifecycle Management
+# ticketfu: Work Lifecycle, Multi-Agent Collaboration, & PR Delivery
 
 You are one agent working alongside many in the same repository. It is essential that you work well together so agents can collaborate, integrate code cleanly, and recover work if one agent runs out of credits, exhausts its context window, or abruptly disconnects.
 
-**Ticketfu** is the operating discipline for organizing work in multi-agent environments. Every task leaves an authoritative, public paper trail so that any agent or human can inspect progress, locate logs, or seamlessly take over without stranded local work.
+**Ticketfu** is the operating discipline for organizing work in multi-agent environments. Every task leaves an authoritative, public paper trail so that any agent or human can inspect progress, locate logs, or seamlessly take over without stranded local work. It unifies the entire delivery pipeline—from ticket inception, branch/worktree setup, and early draft PR beacons, to pre-PR comment hygiene, expert PR descriptions, and safe merge closures.
 
 ---
 
 ## The Ticketfu Lifecycle
 
 ```text
-[1. Ticket] ──> [2. Claim & Branch] ──> [3. Draft PR] ──> [4. Implement & WIP] ──> [5. Sync & Test] ──> [6. Review/Merge] ──> [7. Safe Teardown]
-  Authoritative    In Progress state       [In Progress]      Periodic pushes,         Re-sync main,        Strip prefix,       Verify on remote,
-  Markdown/Linear  Worktree conventions    Placeholder        prevent stranded work    verify tests         gh pr ready         delete LOCAL only
+[1. Ticket] ──> [2. Claim & Branch] ──> [3. Draft PR] ──> [4. Workfu Execution] ──> [5. Handoffs] ──> [6. Comment Hygiene] ──> [7. PR Description] ──> [8. Sync & Merge] ──> [9. Safe Teardown]
+  Authoritative    In Progress state       [In Progress]      Red-to-Green cycle,      Structured memo,     Audit diff comments,     TL;DR, Strategy,         Re-sync main,        Verify remote merge,
+  Markdown/Linear  Worktree conventions    Beacon & Metadata  WIP checkpoint pushes    verify baseline      strip agent artifacts    Verification, Metadata   gh pr ready, merge   delete LOCAL branch only
 ```
 
 ---
@@ -76,7 +75,7 @@ Update the ticket with complete execution metadata:
 
 ---
 
-## 3. The Placeholder Draft PR
+## 3. The Placeholder Draft PR (Coordination Beacon)
 
 Early in the workflow, open a placeholder pull request on GitHub:
 
@@ -89,8 +88,7 @@ Early in the workflow, open a placeholder pull request on GitHub:
      [In Progress] <ticket-name>: <short imperative summary>
      ```
 3. **Description**:
-   - Follow the `prfu` skill guidelines for structure and tone.
-   - Summarize the high-level scope and intended solution.
+   - Summarize the high-level scope and intended solution using the [PR Description Standard](#7-crafting-the-expert-pr-description).
    - **Explicitly include the Agent Metadata block**:
      ```markdown
      ### Agent Metadata
@@ -109,7 +107,7 @@ Early in the workflow, open a placeholder pull request on GitHub:
 
 ---
 
-## 4. Execution & Periodic Checkpoints (Preventing Stranded Work)
+## 4. Execution Discipline & Periodic Checkpoints (Preventing Stranded Work)
 
 Implement changes on your ticket branch with these multi-agent survivability habits:
 
@@ -138,8 +136,9 @@ Implement changes on your ticket branch with these multi-agent survivability hab
 
 ---
 
-## 5. Context Depletion & The Structured Handoff Memo
+## 5. Context Depletion, Handoff Memos, & Takeovers
 
+### The Structured Handoff Memo
 If an agent is running low on context (or before intentional agent transitions), write a concise **Handoff Memo** in the ticket before stopping:
 
 1. **What works**: Passing tests, verified endpoints.
@@ -149,10 +148,7 @@ If an agent is running low on context (or before intentional agent transitions),
 
 Ensure all local WIP is committed and pushed before exiting.
 
----
-
-## 6. Strict Takeover Protocol ("Trust But Verify")
-
+### Strict Takeover Protocol ("Trust But Verify")
 - **Never take over another agent's ticket unless explicitly instructed by the user.**
 - When instructed by the user to take over an existing ticket:
   1. Add an entry to the ticket's **Handoff & Takeover Log** recording your harness, machine, session ID, and timestamp.
@@ -160,11 +156,60 @@ Ensure all local WIP is committed and pushed before exiting.
 
 ---
 
-## 7. Pre-Review Base Branch Sync & PR Finalization
+## 6. Pre-PR Code Comment Hygiene Pass
 
-When implementation is complete:
+Before drafting and finalizing the PR, **conduct a dedicated pass over all changed files to audit code comments**. 
 
-### Step 7.1: Re-Sync with `main`
+AI coding agents tend to dump large, essay-like comments or narrative reports directly into code, severely impairing human readability. Enforce these rules across the diff:
+
+- **Simple, concise, non-verbose**: Strip out paragraph-length explanations and deep reporting. Provide only essential, high-signal context.
+- **Never comment on the obvious**: Do not narrate what clean code already says. Comments like `// instantiate service`, `// loop through items`, or `// return false if null` are pure noise—delete them.
+- **Explain the "Why", not the "What"**: Reserve comments for non-obvious rationale, hidden constraints, edge cases, workarounds, or domain invariants.
+- **Zero agentic artifacts**: Remove any conversational traces, debugging notes, or agent self-narration (e.g., `// Added as requested`, `// Fixed bug seen in test output`, `// TODO: agent check`).
+
+### Code Comment Anti-Patterns
+
+| Bad Comment (Verbose / Obvious / Narrative) | Good Comment (Concise / High-Signal) |
+| :--- | :--- |
+| `// This function takes the user id, queries PostgreSQL to fetch the row, and returns null if the user is not found or deleted.` | *(None needed — function signature `getUser(id)` is self-documenting)* |
+| `// Increment retry count by 1` | *(Delete — explains the obvious)* |
+| `// Added 5000ms timeout here because we noticed the test was hanging when the upstream server took too long to respond.` | `// 5s timeout prevents hung sockets on stalled upstream keep-alives.` |
+| `// We need to lock here so two threads don't write at the same time and cause race conditions.` | `// Serializes writes to prevent concurrent buffer corruption.` |
+
+---
+
+## 7. Crafting the Expert PR Description
+
+### 7.1 Tone & Core Philosophy
+- **Simple, direct, active voice**: Use active verbs ("Adds", "Migrates", "Removes", "Fixes", "Refactors"). Avoid passive constructions ("This change was made in order to...").
+- **Expert-to-expert communication**: Write for fellow technical peers. Speak plainly and directly. Do not over-explain basic programming concepts; clearly stated facts allow reviewers to immediately grasp the ramifications.
+- **Zero conversational fluff**: Eliminate conversational filler, pleasantries, or preamble.
+
+### 7.2 The Context Boundary (Agent Hygiene)
+As an AI agent, you operate with a conversation history, system prompt, tool execution outputs, and internal chain of thought. **The PR reviewer has none of this context.** They only see the repository, git history, and the PR description.
+
+- **The Zero-Leakage Rule**: Never mention or hint at ephemeral agent state, conversation steps, or prompt instructions (no *"As requested by the user..."*, *"In step 3 of the plan..."*).
+- **Explicit Attribution**: Never use ambiguous pronouns ("it", "that thing", "the setting", "the issue"). Always specify whose setting, which module, or what exact error.
+
+### 7.3 Mandatory Structure
+Every PR description must follow this structure in order:
+
+1. **TL;DR (Top Line)**: Exactly one sentence stating what the PR does.
+2. **Current Behavior**: 1–3 concise sentences describing how the system behaved *before* this PR.
+3. **Desired Change**: 1–3 concise sentences describing how the system behaves *after* this PR.
+4. **Implementation Strategy**: **HIGH LEVEL ONLY: 2–4 sentences.** Describe the architectural approach. Do NOT provide a file-by-file laundry list.
+5. **Correctness Verification**: Exact test commands run, outcomes, manual reproduction steps, and edge cases verified.
+6. **Agent Metadata**: Harness, machine, session ID, ticket link.
+7. **Supporting Media / Data Tables** *(if applicable)*: Benchmarks, latency tables, flamegraphs.
+8. **Appendices** *(if applicable)*: Quarantine zone for verbose design rationale, raw logs, or alternative solutions evaluated.
+
+---
+
+## 8. Pre-Review Base Branch Sync, `gh pr ready`, & Merge Closure
+
+When implementation and polish are complete:
+
+### Step 8.1: Re-Sync with `main`
 In multi-agent repositories, other agents may have merged changes into `main` while you worked. Prevent stale merges:
 ```bash
 git fetch origin main
@@ -172,20 +217,23 @@ git merge origin/main  # or git rebase origin/main
 ```
 Resolve any conflicts and run the test suite to confirm compatibility with the latest `main`.
 
-### Step 7.2: Finalize the PR
+### Step 8.2: Finalize the PR
 1. Push all clean, re-synced commits to the remote branch.
-2. Remove the `[In Progress]` prefix from the PR title.
-3. Mark the PR as ready for review:
+2. Update the PR description with the final [PR Markdown Template](#pr-markdown-template).
+3. Remove the `[In Progress]` prefix from the PR title:
+   ```bash
+   gh pr edit --title "<ticket-name>: <short imperative summary>"
+   ```
+4. Mark the PR as ready for review:
    ```bash
    gh pr ready
    ```
-4. Perform a pre-PR comment hygiene pass per `prfu`.
 5. Allow GitHub Actions / CI checks to pass.
 6. Consult the human or merge according to repository instructions.
 
 ---
 
-## 8. Safe Teardown, Cleanup, & Ticket Closure
+## 9. Safe Teardown, Cleanup, & Ticket Closure
 
 Follow this strict ordering to avoid lost state:
 
@@ -246,23 +294,59 @@ Use this format when storing tickets in-repo:
 - **Next Action**: <e.g. Inspect refresh token rotation in auth.py>
 ```
 
+### PR Markdown Template
+
+Use this format when opening and finalizing pull requests:
+
+```markdown
+TL;DR: <Single active-voice sentence stating what this PR does>.
+
+## Current Behavior
+<1-3 concise sentences on how things behaved before this change.>
+
+## Desired Change
+<1-3 concise sentences on how things behave after this change.>
+
+## Implementation Strategy
+<2-4 sentences explaining the high-level approach and key technical mechanisms. Avoid file laundry lists.>
+
+## Correctness Verification
+- **Automated Tests**: `<test command or suite>` passed (<number of tests> passed, 0 failures).
+- **Manual Verification**: <Steps taken to manually exercise the change>.
+- **Edge Cases Tested**: <Specific boundary conditions verified>.
+
+### Agent Metadata
+- **Harness**: <claude-code | codex | muse | antigravity | opencode>
+- **Machine**: <hostname or machine location>
+- **Session ID**: `<session-or-conversation-uuid>`
+- **Ticket**: <link to ticket or ticket filename>
+
+## Supporting Media / Data Tables <!-- Optional: delete if not applicable -->
+| Metric | Before | After | Delta |
+| :--- | :--- | :--- | :--- |
+| P95 Latency | 142ms | 38ms | -73% |
+
+## Appendix: <Topic> <!-- Optional: delete if not applicable -->
+<Verbose context, alternative designs evaluated, extensive benchmark methodology, or raw logs.>
+```
+
 ---
 
 ## Quick Reference Checklist
 
-- [ ] Ticket exists on `main` (markdown) or in Linear (assigned to Edward Benson).
-- [ ] Ticket transitioned to `In Progress`.
-- [ ] Repository worktree conventions checked (`git worktree list`).
-- [ ] Branch (or worktree) created matching `<ticket-name>`.
-- [ ] Ticket updated with branch, machine, harness, and session ID.
-- [ ] Draft PR opened with `[In Progress]` title prefix and metadata in description.
-- [ ] Ticket updated with PR link.
-- [ ] Periodic WIP commits pushed to remote branch to prevent stranded work.
-- [ ] If handed over: Handoff Memo written and all WIP pushed.
-- [ ] If taking over: Baseline tests run and verified before writing code.
-- [ ] Implementation executed using `workfu` (Red-first proof, dynamic planning, behavior pinning, gate matrix).
-- [ ] Implementation complete; branch re-synced with latest `origin/main` and tested.
-- [ ] PR title updated (stripped `[In Progress]`), marked ready for review (`gh pr ready`).
-- [ ] Remote merge confirmed; local `main` pulled (and worktree removed if used).
-- [ ] Ticket marked `Completed` with merged PR link.
-- [ ] Local branch deleted; remote branch preserved.
+- [ ] **Ticket Exists**: Ticket exists on `main` (markdown) or in Linear (assigned to Edward Benson).
+- [ ] **Ticket Claimed**: Ticket transitioned to `In Progress`.
+- [ ] **Workspace Prepared**: Repository worktree conventions checked; branch created matching `<ticket-name>`.
+- [ ] **Recovery Metadata Logged**: Ticket updated with branch, machine, harness, and session ID.
+- [ ] **Draft PR Beacon Opened**: Opened draft PR with `[In Progress]` title prefix and Agent Metadata.
+- [ ] **Ticket Linked**: Ticket updated with PR link.
+- [ ] **WIP Checkpoints Pushed**: Periodic WIP commits pushed to remote branch to prevent stranded work.
+- [ ] **Execution Disciplined**: Implementation executed using `workfu` (Red-first, gate matrix, pinned tests).
+- [ ] **Comment Hygiene Audited**: Diff reviewed; obvious comments removed, non-obvious "why" retained, zero agent artifacts.
+- [ ] **Code Simplified**: Accidental complexity and dead scaffolding audited (using `simplifyfu`).
+- [ ] **Second Opinion Checked**: Optional adversarial review on diff (using `codex`).
+- [ ] **PR Finalized**: Description formatted per template; `[In Progress]` stripped from title; marked `gh pr ready`.
+- [ ] **Re-Synced & Tested**: Branch merged with latest `origin/main` and passes all validation gates.
+- [ ] **Remote Merge Confirmed**: PR merged on remote; local `main` pulled (worktree cleaned up).
+- [ ] **Ticket Closed**: Marked `Completed` with merged PR link.
+- [ ] **Safe Cleanup**: Local branch deleted; remote branch preserved.
