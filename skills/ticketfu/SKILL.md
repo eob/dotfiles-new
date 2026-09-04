@@ -344,7 +344,6 @@ TL;DR: <Single active-voice sentence stating what this PR does>.
 - [ ] **Execution Disciplined**: Implementation executed using `workfu` (Red-first, gate matrix, pinned tests).
 - [ ] **Comment Hygiene Audited**: Diff reviewed; obvious comments removed, non-obvious "why" retained, zero agent artifacts.
 - [ ] **Code Simplified**: Accidental complexity and dead scaffolding audited (using `simplifyfu`).
-- [ ] **Second Opinion Checked**: Optional adversarial review on diff (using `codex`).
 - [ ] **PR Finalized**: Description formatted per template; `[In Progress]` stripped from title; marked `gh pr ready`.
 - [ ] **Re-Synced & Tested**: Branch merged with latest `origin/main` and passes all validation gates.
 - [ ] **Remote Merge Confirmed**: PR merged on remote; local `main` pulled (worktree cleaned up).

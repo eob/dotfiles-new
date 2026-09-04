@@ -17,8 +17,6 @@ skills/
 
 ## Available Skills
 
-### The Fu Suite (Autonomous Craftsmanship & Lifecycle)
-
 | Skill | Description |
 | :--- | :--- |
 | [`ticketfu`](./ticketfu/SKILL.md) | Multi-agent lifecycle & PR delivery: authoritative ticketing, traceable branch naming, worktree awareness, draft PR beacons, pre-PR comment hygiene, expert PR descriptions, and safe merge closures. |
@@ -26,13 +24,6 @@ skills/
 | [`debugfu`](./debugfu/SKILL.md) | Systematic root-cause debugging: Hypothesis-driven 4-phase diagnostic investigation (Isolate → Observe → Prove → Remedy). |
 | [`simplifyfu`](./simplifyfu/SKILL.md) | Code simplification & anti-bloat: Post-implementation audit to strip accidental complexity, YAGNI bloat, and dead scaffolding. |
 | [`researchfu`](./researchfu/SKILL.md) | Evidence-backed technical research: Plan, conduct, and present auditable technical research for consequential decisions. |
-
-### Harness CLI Connectors
-
-| Skill | Description |
-| :--- | :--- |
-| [`codex`](./codex/SKILL.md) | Invoke OpenAI Codex CLI (`codex`) for independent code reviews, second opinions, adversarial checks, and non-interactive delegation. |
-| [`opencode`](./opencode/SKILL.md) | Invoke OpenCode CLI (`opencode`) for headless task execution, multi-model agent workflows, and PR checkouts. |
 
 ## Integration & Discovery
 
