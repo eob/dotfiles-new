@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copy agent skills to Claude Code, Google Antigravity, OpenAI Codex, and OpenCode.
+# Copy agent skills to Claude Code, Google Antigravity, OpenAI Codex, OpenCode, and Muse.
 # Uses directory copying rather than symlinking to allow maintaining private skills
 # locally in agent skill directories without exposing them to this public repository.
 set -euo pipefail
@@ -14,6 +14,7 @@ TARGET_DIRS=(
   "${HOME}/.gemini/config/skills"
   "${HOME}/.codex/skills"
   "${HOME}/.config/opencode/skills"
+  "${HOME}/.config/muse/skills"
 )
 
 # Ensure target directories exist

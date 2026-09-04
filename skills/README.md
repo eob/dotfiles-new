@@ -1,6 +1,6 @@
 # Agent Skills
 
-A collection of portable, modular skills for AI agents (Claude Code, Google Antigravity, OpenAI Codex CLI, OpenCode, Cursor, etc.) managed within dotfiles.
+A collection of portable, modular skills for AI agents (Claude Code, Google Antigravity, OpenAI Codex CLI, OpenCode, Muse, Cursor, etc.) managed within dotfiles.
 
 ## Organization
 
@@ -25,6 +25,7 @@ skills/
 | [`code-simplify`](./code-simplify/SKILL.md) | Post-implementation audit to strip accidental complexity, dead code, and over-engineering. |
 | [`codex`](./codex/SKILL.md) | Invoke OpenAI Codex CLI (`codex`) for second opinions, adversarial reviews, and task delegation. |
 | [`opencode`](./opencode/SKILL.md) | Invoke OpenCode CLI (`opencode`) for headless execution, multi-model agent runs, and PR checkouts. |
+| [`ticketflow`](./ticketflow/SKILL.md) | Multi-agent collaboration workflow: authoritative ticketing, traceable branch naming, placeholder draft PRs, and safe merge closures. |
 
 ## Integration & Discovery
 
@@ -34,6 +35,7 @@ Running `make install` or `install.d/shared/08_agent_skills.sh` ensures each age
 - **Google Antigravity**: `~/.gemini/config/skills/`
 - **OpenAI Codex CLI**: `~/.codex/skills/`
 - **OpenCode**: `~/.config/opencode/skills/`
+- **Muse**: `~/.config/muse/skills/`
 
 > [!NOTE]
 > Skills are copied rather than symlinked to allow you to maintain private or work-specific skills locally in your agent directories without exposing them to this public dotfiles repository. Re-running the script safely updates the public skills without touching any private skills.
