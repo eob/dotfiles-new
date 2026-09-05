@@ -47,9 +47,12 @@ focus between panes; Alt+n opens a new pane.
 ### Shortcuts
 
 z → zellij-launch (attach to / create the default zellij session)
+a → agy --dangerously-skip-permissions (YOLO Antigravity)
 c → claude --dangerously-skip-permissions (YOLO Claude)
+x → codex --yolo (YOLO Codex)
 v → nvim . (or a file)
 vdot → cd to ~/.dotfiles and open nvim
+brain → AI cognitive OS CLI (inbox triage, vector search, cowork agenda, sync)
 editzsh / sourcezsh — edit/reload zshrc
 devbox → mosh into the devbox (UDP; roams across sleep/wifi changes)
 devbox-ssh → SSH over TCP with dev ports forwarded (captive/airplane wifi); reaps

@@ -1,0 +1,15 @@
+# Agent ephemeral vector index and cache
+agent/cache/
+*.db
+*.db-journal
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
+# OS metadata & local editor scratchpads
+.DS_Store
+.vscode/
+.idea/
+scratch/
+*.local.md

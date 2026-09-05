@@ -5,3 +5,5 @@ nvim/parser/
 
 .claude/settings.local.json
 .zshrc.local
+__pycache__/
+*.py[cod]
