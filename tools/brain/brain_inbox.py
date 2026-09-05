@@ -271,7 +271,7 @@ def cmd_next(args: argparse.Namespace) -> None:
             print(f"Due / Trigger Date: {result['dueDate']}")
         print(f"\nDescription:\n{result['description'] or '(empty)'}")
         print(f"\nTo process this ticket, run:")
-        print(f"  python3 agent/tools/brain-inbox.py handle {result['identifier']}")
+        print(f"  brain inbox handle {result['identifier']}")
 
 
 def fetch_issue_by_identifier(identifier: str) -> dict | None:

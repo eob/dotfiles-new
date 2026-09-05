@@ -840,7 +840,7 @@ def cmd_status(conn: sqlite3.Connection) -> None:
                 print(f"    * {p}")
             if len(modified) > 5:
                 print(f"    ... and {len(modified) - 5} more")
-        print("\nRun: python3 agent/tools/brain-index.py sweep to synchronize.")
+        print("\nRun: brain sweep to synchronize.")
     else:
         print("\n[✓] Index is fully synchronized with disk.")
 
