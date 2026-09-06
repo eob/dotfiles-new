@@ -47,6 +47,8 @@ def check_links(files: list[Path]) -> list[str]:
             if not link or link.startswith(("#", "http://", "https://", "mailto:")):
                 continue
             path_part = unquote(link.split("#", 1)[0])
+            if path_part.startswith("file://"):
+                path_part = path_part[7:]
             target = Path(path_part)
             if not target.is_absolute():
                 target = source.parent / target
