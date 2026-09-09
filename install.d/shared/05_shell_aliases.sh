@@ -6,6 +6,7 @@ ALIASES=(
   'alias a="agy --dangerously-skip-permissions"'
   'alias c="claude --dangerously-skip-permissions"'
   'alias x="codex --yolo"'
+  'alias m="muse --yolo"'
 )
 
 if [[ -f "${HOME}/.bashrc" ]]; then

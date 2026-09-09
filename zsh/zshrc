@@ -89,6 +89,7 @@ alias gpf='git push --force origin $(git branch --show-current)'
 alias a='agy --dangerously-skip-permissions'
 alias c='claude --dangerously-skip-permissions'
 alias x='codex --yolo'
+alias m='muse --yolo'
 alias editzsh='nvim ~/.zshrc'
 alias sourcezsh='source ~/.zshrc'
 alias vdot="cd ${HOME}/.dotfiles && v"
