@@ -212,6 +212,9 @@ if [[ -d "${HOME}/.volta" ]]; then
   export PATH="${VOLTA_HOME}/bin:${PATH}"
 fi
 
+# kaya (installed by install.d/shared/09_kaya.sh)
+[[ -d "${HOME}/.kaya/bin" ]] && export PATH="${HOME}/.kaya/bin:${PATH}"
+
 # kubectl
 if command -v kubectl &>/dev/null; then
   source <(kubectl completion zsh)

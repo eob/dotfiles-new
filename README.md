@@ -8,6 +8,7 @@
 * **.gitconfig**: git and GitHub configuration
 * **.hushlogin**: no MOTD
 * **skills**: modular AI agent skills (Claude Code, Google Antigravity, etc.)
+* **kaya**: the Kaya CLI + `kayad` daemon in `~/.kaya`, via the official [kaya-lang.org](https://kaya-lang.org/install) installer (`install.d/shared/09_kaya.sh`)
 
 ## Usage
 
