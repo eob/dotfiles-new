@@ -6,6 +6,7 @@ set -euo pipefail
 brew install \
   git \
   zsh \
+  mosh \
   zellij \
   python3 \
   node \

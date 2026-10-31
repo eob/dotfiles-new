@@ -19,6 +19,14 @@ set -euo pipefail
 port="${DEVBOX_PORT:-22}"
 mosh_port="${DEVBOX_MOSH_PORT:-}"
 
+# Check local linkage before touching any running remote sessions.
+if ! command -v mosh >/dev/null 2>&1 || ! mosh-client --version >/dev/null 2>&1; then
+  echo "devbox: mosh-client is missing or cannot start." >&2
+  echo "On macOS, run devbox-repair to repair its Homebrew dependencies." >&2
+  echo "For immediate SSH access, run devbox-ssh." >&2
+  exit 1
+fi
+
 # A mosh-server from a previous session that lost its client lingers, holding
 # its UDP port — fatal with a fixed DEVBOX_MOSH_PORT ("bind: Address already in
 # use / Did not find mosh server startup message"), and clutter otherwise.

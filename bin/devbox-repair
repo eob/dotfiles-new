@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Repair Homebrew's mosh dependency chain after an incompatible library upgrade.
+set -euo pipefail
+
+if [[ "$(uname -s)" != Darwin ]]; then
+  echo "devbox-repair is for the macOS Homebrew client; run it on your Mac." >&2
+  exit 1
+fi
+
+if ! command -v brew >/dev/null 2>&1; then
+  echo "devbox-repair: Homebrew is missing from PATH." >&2
+  exit 1
+fi
+
+brew update
+brew reinstall abseil protobuf mosh
+brew linkage --test abseil protobuf mosh
+mosh-client --version
+echo "Mosh is ready. Run devbox to connect."

@@ -24,6 +24,11 @@ install:
 	- $(CURDIR)/scripts/go-install.sh
 	- bash $(CURDIR)/install.d/shared/08_agent_skills.sh
 	- bash $(CURDIR)/install.d/shared/09_kaya.sh
+	- bash $(CURDIR)/scripts/rex-install.sh
+
+.PHONY: test
+test:
+	python3 -m unittest discover -s tests -v
 
 .PHONY: update/kitty
 update/kitty:
